@@ -16,7 +16,7 @@ Este projeto visa incentivar o descarte correto do lixo, auxiliando a localizar 
 
 O roteiro da aplicação pode ser conferido no Trello
 
-- [Trello](https://trello.com/b/goHFnQ89/destino-certo-api)
+- [Trello](https://trello.com/b/hYMOxXo2/m3p-backend-squad-2)
 
 ## Diagrama ERD (Entity-Relationship Diagram)
 
@@ -35,7 +35,7 @@ O Diagrama Entidade-Relacionamento pode ser visualizado do DrawSql.
 - Para usar o **Destino Certo - API**, clone ou faça download do repositório:
 
 ```bash
-git clone https://github.com/charlesbiveu/destinoCerto-API.git
+git clone https://github.com/FuturoDEV-Eco/M3P-BackEnd-Squad2
 ```
 
 - Depois execute a instalação das dependências
@@ -400,3 +400,9 @@ Sites
 - Roteiro da aplicação: [ Trello ](https://trello.com/)
 - Gerar Diagramas ER: [DrawSql](https://drawsql.io)
 - Destino Certo FrontEnd: [DestinoCerto](https://github.com/charlesbiveu/destinoCerto)
+
+## Autores
+
+- Bianca Silva Barcelos: [GitHub](https://github.com/BiancaBarcelos)
+- Charles Biveu Doehl: [GitHub](https://github.com/charlesbiveu)
+- Francisco Grimes da Silva: [GitHub](https://github.com/franciscogrimes)

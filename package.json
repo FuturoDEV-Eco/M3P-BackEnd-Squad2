@@ -6,7 +6,7 @@
   "scripts": {
     "start:prod": "node src/index.js",
     "start:dev": "nodemon src/index.js",
-     "swagger": "node ./autoGen.swagger.js"
+    "swagger": "node ./autoGen.swagger.js"
   },
   "keywords": [],
   "author": "Charles Biveu Doehl",
@@ -21,7 +21,8 @@
     "pg": "^8.12.0",
     "sequelize": "^6.37.3",
     "swagger-autogen": "^2.23.7",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.4",

@@ -5,7 +5,7 @@
     "description": "Documentação da Destino Certo - API - projeto final módulo 02",
     "version": "1.0.0"
   },
-  "host": "localhost:3000",
+  "host": "localhost:3001",
   "basePath": "/",
   "schemes": [
     "http"
@@ -96,6 +96,34 @@
         }
       }
     },
+    "/usuarios/count": {
+      "get": {
+        "tags": [
+          "Usuários"
+        ],
+        "description": "Endpoint para contar o número total de usuários.",
+        "responses": {
+          "200": {
+            "description": "Número total de usuários.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "number",
+                  "example": 100
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor."
+          }
+        }
+      }
+    },
     "/usuarios/criar": {
       "post": {
         "tags": [
@@ -178,6 +206,9 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "201": {
             "description": "Usuário criado com sucesso."
           },
@@ -307,6 +338,9 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "201": {
             "description": "Ponto de coleta criado com sucesso."
           },
@@ -336,9 +370,6 @@
           },
           "400": {
             "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
           },
           "500": {
             "description": "Erro interno do servidor."
@@ -398,6 +429,18 @@
             "name": "authorization",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "where": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {

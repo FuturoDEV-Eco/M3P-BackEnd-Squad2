@@ -136,7 +136,20 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const countUsers = async (req, res) => {
+  try {
+    const userCount = await User.count();
+    return res.status(200).json({ count: userCount });
+  } catch (error) {
+    console.error('Internal Server Error:', error);
+    return res
+      .status(500)
+      .json({ error: 'Erro interno do servidor // Internal Server Error' });
+  }
+};
+
 module.exports = {
   createUser,
   deleteUser,
+  countUsers,
 };

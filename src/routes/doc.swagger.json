@@ -307,6 +307,9 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "201": {
             "description": "Ponto de coleta criado com sucesso."
           },
@@ -336,9 +339,6 @@
           },
           "400": {
             "description": "Bad Request"
-          },
-          "404": {
-            "description": "Not Found"
           },
           "500": {
             "description": "Erro interno do servidor."
@@ -398,6 +398,18 @@
             "name": "authorization",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "where": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -549,6 +561,41 @@
           },
           "404": {
             "description": "Ponto de coleta ou CEP não encontrado."
+          },
+          "500": {
+            "description": "Erro interno do servidor."
+          }
+        }
+      }
+    },
+    "/local/count": {
+      "get": {
+        "tags": [
+          "Pontos de Coleta"
+        ],
+        "description": "Endpoint para contar o número total de pontos de coleta.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Número total de pontos de coleta.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "number",
+                  "example": 100
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
             "description": "Erro interno do servidor."

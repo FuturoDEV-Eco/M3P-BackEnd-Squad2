@@ -299,6 +299,19 @@ const getCollectionPointMapLink = async (req, res) => {
       .status(500)
       .json({ error: 'Erro interno do servidor // Internal Server Error' });
   }
+
+};
+
+const countCollections = async (req, res) => {
+  try {
+    const collectionCount = await CollectionPoint.count();
+    return res.status(200).json({ count: collectionCount });
+  } catch (error) {
+    console.error('Internal Server Error:', error);
+    return res
+      .status(500)
+      .json({ error: 'Erro interno do servidor // Internal Server Error' });
+  }
 };
 
 module.exports = {
@@ -308,4 +321,5 @@ module.exports = {
   deleteCollectionPoint,
   updateCollectionPoint,
   getCollectionPointMapLink,
+  countCollections
 };

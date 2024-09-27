@@ -221,6 +221,112 @@
         }
       }
     },
+    "/usuarios/atualizar": {
+      "put": {
+        "tags": [
+          "Usuários"
+        ],
+        "description": "Endpoint para realiar a atualização dos dados do usuário.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            
+            "name": "alterarDados",
+            "in": "body",
+            "description": "Dados do usuário",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Nelson Marcos Vinicius Oliveira"
+                },
+                "cpf": {
+                  "type": "string",
+                  "example": "86288575917"
+                },
+                "gender": {
+                  "type": "string",
+                  "example": "M"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "nelsonmarcosoliveira@kimmay.com.br"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "Teste123!"
+                },
+                "birthdate": {
+                  "type": "string",
+                  "example": "1975-08-02"
+                },
+                "postalcode": {
+                  "type": "string",
+                  "example": "88067108"
+                },
+                "street": {
+                  "type": "string",
+                  "example": "Servidão Manoel Barbosa"
+                },
+                "neighborhood": {
+                  "type": "string",
+                  "example": "Pântano do Sul"
+                },
+                "city": {
+                  "type": "string",
+                  "example": "Florianópolis"
+                },
+                "state": {
+                  "type": "string",
+                  "example": "SC"
+                },
+                "number": {
+                  "type": "string",
+                  "example": "634"
+                }
+              },
+            
+              "required": [
+                "name",
+                "gender",
+                "email",
+                "password",
+                "birthdate",
+                "postalcode",
+                "street",
+                "neighborhood",
+                "city",
+                "state",
+                "number"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Usuário criado com sucesso."
+          },
+          "400": {
+            "description": "Dados inválidos fornecidos."
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "409": {
+            "description": "CPF ou email já existem."
+          },
+          "500": {
+            "description": "Erro interno do servidor."
+          }
+        }
+      }
+    },
     "/usuarios/{id}": {
       "delete": {
         "tags": [

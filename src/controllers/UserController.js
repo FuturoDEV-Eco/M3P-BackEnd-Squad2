@@ -207,7 +207,7 @@ const updateUser = async (req,res) => {
 
         // Validate password
 
-        const passwordError = validateDescription(password);
+        const passwordError = validatePassword(password);
         if (passwordError)
           return res
             .status(passwordError.status)
@@ -215,21 +215,14 @@ const updateUser = async (req,res) => {
 
         // Validate birthdate
 
-        const birthdateError = validateDescription(birthdate);
+        const birthdateError = validateBirthdate(birthdate);
         if (birthdateError)
           return res
             .status(birthdateError.status)
             .json({ error: birthdateError.message })
 
-        // Validate complement
 
-        const complementError = validateDescription(complement);
-        if (complementError)
-          return res
-            .status(complementError.status)
-            .json({ error: complementError.message })
-
-    const user = await User.findAll({ where: { id: userId } })
+    const user = await User.findOne({ where: { id: userId } })
 
         // Atualizar usuário
         user.name = name;
@@ -243,11 +236,20 @@ const updateUser = async (req,res) => {
         user.birthdate = birthdate;
         user.email = email;
         user.password = password;
+
+
+      await user.save()
+      return res.status(200).json(user);
+
     
 
   }catch(error){
-
+    console.error('Erro interno do servidor:', error.message);
+    return res
+      .status(500)
+      .json({ error: 'Erro interno do servidor // Internal Server Error' });
   }
+  
 
 
 
@@ -256,5 +258,6 @@ const updateUser = async (req,res) => {
 module.exports = {
   createUser,
   deleteUser,
-  listUser
+  listUser,
+  updateUser
 };

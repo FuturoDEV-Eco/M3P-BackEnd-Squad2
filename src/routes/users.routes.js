@@ -43,6 +43,45 @@ usersRoutes.post(
     }
   */
 );
+usersRoutes.put(
+  '/atualizar',
+  validateToken,
+
+  UserController.updateUser
+  /*
+    #swagger.tags = ['Usuários']
+    #swagger.description = 'Endpoint para realiar a atualização dos dados do usuário.'
+    #swagger.parameters['alterarDados'] = {
+        in: 'body',
+        description: 'Dados do usuário',
+        required: true,
+        schema: {
+            $name: "Nelson Marcos Vinicius Oliveira",
+            $cpf: "86288575917",
+            $gender: "M",
+            $email: "nelsonmarcosoliveira@kimmay.com.br",
+            $password: "Teste123!",
+            $birthdate: "1975-08-02",
+            $postalcode: "88067108",
+            $street: "Servidão Manoel Barbosa",
+            $neighborhood: "Pântano do Sul",
+            $city: "Florianópolis",
+            $state: "SC",
+            $number: "634"
+        }
+    }
+    #swagger.responses[201] = {
+      description: 'Usuário atualizado com sucesso.'
+    }
+    #swagger.responses[400] = {
+      description: 'Dados inválidos fornecidos.'
+    }
+
+    #swagger.responses[500] = {
+      description: 'Erro interno do servidor.'
+    }
+  */
+);
 usersRoutes.get(
   '/',
   validateToken,

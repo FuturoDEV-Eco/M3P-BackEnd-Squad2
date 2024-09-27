@@ -1,10 +1,6 @@
 const CollectionPoint = require('../models/CollectionPoint');
-const {
-  validateAddress,
-  validateRecycleTypes,
-  validateName,
-  validateDescription,
-} = require('../utils/validation');
+
+
 const { getMapLocal, getGoogleMapsLink } = require('../services/mapService');
 
 const createCollectionPoint = async (req, res) => {

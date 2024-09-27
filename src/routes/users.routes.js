@@ -43,6 +43,46 @@ usersRoutes.post(
     }
   */
 );
+usersRoutes.get(
+  '/',
+  validateToken,
+  UserController.listUser
+  /*
+    #swagger.tags = ['Usuários']
+    #swagger.description = 'Endpoint para listar os dados do usuário.'
+    #swagger.parameters['criarUsuario'] = {
+        in: 'body',
+        description: 'Dados do usuário',
+        required: true,
+        schema: {
+            $name: "Nelson Marcos Vinicius Oliveira",
+            $cpf: "86288575917",
+            $gender: "M",
+            $email: "nelsonmarcosoliveira@kimmay.com.br",
+            $password: "Teste123!",
+            $birthdate: "1975-08-02",
+            $postalcode: "88067108",
+            $street: "Servidão Manoel Barbosa",
+            $neighborhood: "Pântano do Sul",
+            $city: "Florianópolis",
+            $state: "SC",
+            $number: "634"
+        }
+    }
+    #swagger.responses[201] = {
+      description: 'Usuário criado com sucesso.'
+    }
+    #swagger.responses[400] = {
+      description: 'Dados inválidos fornecidos.'
+    }
+    #swagger.responses[409] = {
+      description: 'CPF ou email já existem.'
+    }
+    #swagger.responses[500] = {
+      description: 'Erro interno do servidor.'
+    }
+  */
+);
 
 usersRoutes.delete(
   '/:id',

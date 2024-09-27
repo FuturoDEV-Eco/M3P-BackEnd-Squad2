@@ -134,9 +134,127 @@ const deleteUser = async (req, res) => {
       .status(500)
       .json({ error: 'Erro interno do servidor // Internal Server Error' });
   }
+
 };
+const listUser = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const user = await User.findOne({
+      where: { id: userId },
+    });
+    return res.status(200).json(user);
+  } catch (error) {
+    console.error('Erro interno do servidor:', error.message);
+    return res
+      .status(500)
+      .json({ error: 'Erro interno do servidor // Internal Server Error' });
+  }
+};
+
+const updateUser = async (req,res) => {
+  try{
+
+    const userId = req.userId; // Obtém o ID do usuário autenticado
+    
+
+    const {
+      name,
+      gender,
+      postalcode,
+      street,
+      neighborhood,
+      city,
+      state,
+      number,
+      complement,
+      birthdate,
+      email,
+      password
+    } = req.body;
+
+        // Validate address
+        const validationError = validateAddress(
+          postalcode,
+          street,
+          neighborhood,
+          city,
+          state,
+          number
+        );
+        if (validationError)
+          return res
+            .status(validationError.status)
+            .json({ error: validationError.message });
+    
+        // Validate name
+        const nameError = validateName(name);
+        if (nameError)
+          return res.status(nameError.status).json({ error: nameError.message });
+    
+        // Validate gender
+        const genderError = validateGender(gender);
+        if (genderError)
+          return res
+            .status(genderError.status)
+            .json({ error: genderError.message })
+
+        // Validate email
+        const emailError = validateEmail(email);
+        if (emailError)
+          return res
+            .status(emailError.status)
+            .json({ error: emailError.message })
+
+        // Validate password
+
+        const passwordError = validateDescription(password);
+        if (passwordError)
+          return res
+            .status(passwordError.status)
+            .json({ error: passwordError.message })
+
+        // Validate birthdate
+
+        const birthdateError = validateDescription(birthdate);
+        if (birthdateError)
+          return res
+            .status(birthdateError.status)
+            .json({ error: birthdateError.message })
+
+        // Validate complement
+
+        const complementError = validateDescription(complement);
+        if (complementError)
+          return res
+            .status(complementError.status)
+            .json({ error: complementError.message })
+
+    const user = await User.findAll({ where: { id: userId } })
+
+        // Atualizar usuário
+        user.name = name;
+        user.gender = gender;
+        user.postalcode = postalcode.replace(/[^\d]+/g, '');
+        user.street = street;
+        user.neighborhood = neighborhood;
+        user.city = city;
+        user.state = state;
+        user.complement = complement;
+        user.birthdate = birthdate;
+        user.email = email;
+        user.password = password;
+    
+
+  }catch(error){
+
+  }
+
+
+
+}
 
 module.exports = {
   createUser,
   deleteUser,
+  listUser
 };

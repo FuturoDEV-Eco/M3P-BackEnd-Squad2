@@ -1,4 +1,6 @@
-const CollectionPoint = require('../models/CollectionPoint');
+
+
+
 const {
   validateAddress,
   validateRecycleTypes,
@@ -6,6 +8,7 @@ const {
   validateDescription,
 } = require('../utils/validation');
 const { getMapLocal, getGoogleMapsLink } = require('../services/mapService');
+const CollectionReadUseCase = require('../useCases/collectionsPoints/CollectionReadUseCase');
 
 const createCollectionPoint = async (req, res) => {
   try {
@@ -98,12 +101,13 @@ const createCollectionPoint = async (req, res) => {
   }
 };
 const listUserCollectionPoints = async (req, res) => {
+  const collectionUseCase = new CollectionReadUseCase()
+
   try {
-    const userId = req.userId;
-    const collectionPoints = await CollectionPoint.findAll({
-      where: { user_id: userId },
-    });
-    return res.status(200).json(collectionPoints);
+    
+    const collectionRead = await collectionUseCase.execute()
+    return res.status(200).json(collectionRead)
+
   } catch (error) {
     console.error('Erro interno do servidor:', error);
     return res
@@ -300,7 +304,19 @@ const getCollectionPointMapLink = async (req, res) => {
       .json({ error: 'Erro interno do servidor // Internal Server Error' });
   }
 };
+const countCollectionPoint = async (req, res) => {
+  const collectionCountUseCase = new CollectionCountUseCase();
 
+  try {
+    const collectionCount = await collectionCountUseCase.execute();
+    return res.status(200).json({ count: collectionCount });
+  } catch (error) {
+    console.error('Internal Server Error:', error.message);
+    return res.status(500).json({
+      error: 'Erro interno do servidor // Internal Server Error',
+    });
+  }
+};
 module.exports = {
   createCollectionPoint,
   listUserCollectionPoints,
@@ -308,4 +324,5 @@ module.exports = {
   deleteCollectionPoint,
   updateCollectionPoint,
   getCollectionPointMapLink,
+  countCollectionPoint
 };

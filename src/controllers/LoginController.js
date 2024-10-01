@@ -1,62 +1,21 @@
-const User = require("../models/User")
-const { compareSync } = require('bcryptjs')
-const { sign } = require('jsonwebtoken')
+const LoginUseCase = require('../useCases/login/LoginUseCase');
 
 class LoginController {
+  async login(request, response) {
+    const data = request.body;
+    const loginUseCase = new LoginUseCase();
 
-    async login(request, response) {
-        try {
-            const data = request.body
-
-            if (!data.email || !data.password) {
-                return response
-                    .status(400)
-                    .json({ mensagem: 'E-mail e senha são obrigatórios // Email and password are required' })
-            }
-
-            const user = await User.findOne({
-                where: {
-                    email: data.email
-                }
-            })
-
-            if (!user) {
-                return response
-                    .status(404)
-                    .json({ mensagem: 'Usuário não encontrado // User not found' })
-            }
-
-            const passwordOk = compareSync(data.password, user.password)
-
-            if (passwordOk === false) {
-                return response
-                    .status(404)
-                    .json({
-                        mensagem: 'A senha ou o e-mail estão incorretos // The password or email is incorrect'
-                    })
-            }
-
-            const token = sign({
-                id: user.id
-            },
-                process.env.JWT_SECRET,
-                {
-                    expiresIn: '1d'
-                }
-            )
-
-            response.json({
-                token: token,
-                id: user.id,
-                name: user.name
-            })
-
-        } catch (error) {
-            console.log(error)
-            response.status(500).json({ mensagem: 'Erro interno do servidor // Internal Server Error' })
-        }
+    try {
+      const result = await loginUseCase.execute(data);
+      return response.json(result);
+    } catch (error) {
+      console.error('Error in LoginController:', error);
+      const status = error.status || 500;
+      const message =
+        error.message || 'Erro interno do servidor // Internal Server Error';
+      return response.status(status).json({ mensagem: message });
     }
-
+  }
 }
 
-module.exports = new LoginController()
+module.exports = new LoginController();

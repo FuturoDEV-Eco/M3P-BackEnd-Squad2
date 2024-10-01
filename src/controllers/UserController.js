@@ -1,5 +1,8 @@
 const User = require('../models/User');
 const CollectionPoint = require('../models/CollectionPoint');
+
+const UsersCountUseCase = require('../usecases/UsersCountUseCase');
+
 const {
   validateCPF,
   validateName,
@@ -137,14 +140,16 @@ const deleteUser = async (req, res) => {
 };
 
 const countUsers = async (req, res) => {
+  const usersCountUseCase = new UsersCountUseCase();
+
   try {
-    const userCount = await User.count();
+    const userCount = await usersCountUseCase.execute();
     return res.status(200).json({ count: userCount });
   } catch (error) {
-    console.error('Internal Server Error:', error);
-    return res
-      .status(500)
-      .json({ error: 'Erro interno do servidor // Internal Server Error' });
+    console.error('Internal Server Error:', error.message);
+    return res.status(500).json({
+      error: 'Erro interno do servidor // Internal Server Error',
+    });
   }
 };
 

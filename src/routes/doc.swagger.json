@@ -206,17 +206,11 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          },
           "201": {
             "description": "Usuário criado com sucesso."
           },
           "400": {
             "description": "Dados inválidos fornecidos."
-          },
-          "404": {
-            "description": "Not Found"
           },
           "409": {
             "description": "CPF ou email já existem."

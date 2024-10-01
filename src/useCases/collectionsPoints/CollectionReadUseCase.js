@@ -2,16 +2,15 @@ const CollectionPoint = require("../../models/CollectionPoint");
 
 
 class CollectionReadUseCase  {
-    async execute(){
+    async execute(userId){
 
         try{
-            const userId = req.userId;
             const collectionPoints = await CollectionPoint.findAll({
               where: { user_id: userId },
             });
-            return res.status(200).json(collectionPoints);
+            return collectionPoints;
         }catch(error){
-            throw new Error('Erro ao contar os pontos de coleta: ' + error.message);
+            throw new Error('Erro ao visualizar os pontos de coleta: ' + error.message);
         }
     }
 }

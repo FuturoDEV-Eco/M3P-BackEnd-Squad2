@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('../../models/User');
 const {
   validateCPF,
   validateName,
@@ -7,7 +7,7 @@ const {
   validatePassword,
   validateBirthdate,
   validateAddress,
-} = require('../utils/validation');
+} = require('../../utils/validation');
 
 class UserCreateUseCase {
   async execute(userData) {

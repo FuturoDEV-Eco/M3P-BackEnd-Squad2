@@ -1,8 +1,8 @@
 const User = require('../models/User');
 const CollectionPoint = require('../models/CollectionPoint');
 
-const UsersCountUseCase = require('../usecases/UsersCountUseCase');
-const UserCreateUseCase = require('../usecases/UserCreateUseCase');
+const UsersCountUseCase = require('../useCases/users/UsersCountUseCase');
+const UserCreateUseCase = require('../useCases/users/UserCreateUseCase');
 
 const {
   validateCPF,

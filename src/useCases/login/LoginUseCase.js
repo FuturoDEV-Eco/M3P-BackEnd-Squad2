@@ -42,6 +42,7 @@ class LoginUseCase {
       const token = sign(
         {
           id: user.id,
+          isAdmin: user.admin,
         },
         process.env.JWT_SECRET,
         {

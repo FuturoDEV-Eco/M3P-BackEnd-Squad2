@@ -3,6 +3,7 @@ const CollectionPoint = require('../models/CollectionPoint');
 
 const UsersCountUseCase = require('../useCases/users/UsersCountUseCase');
 const UserCreateUseCase = require('../useCases/users/UserCreateUseCase');
+const UserGetLoggedUserUseCase = require('../useCases/users/UserGetLoggedUserUseCase');
 
 const {
   validateCPF,
@@ -126,8 +127,29 @@ const countUsers = async (req, res) => {
   }
 };
 
+const getLoggedUser = async (req, res) => {
+  const userGetLoggedUserUseCase = new UserGetLoggedUserUseCase();
+  try {
+    const user = await userGetLoggedUserUseCase.execute(req.userId);
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ mensagem: 'Usuário não encontrado // User not found' });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error('Erro ao buscar usuário:', error);
+    res
+      .status(500)
+      .json({ mensagem: 'Erro interno do servidor // Internal Server Error' });
+  }
+};
+
 module.exports = {
   createUser,
   deleteUser,
   countUsers,
+  getLoggedUser,
 };

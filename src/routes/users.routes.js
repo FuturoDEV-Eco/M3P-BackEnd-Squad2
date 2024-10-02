@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const UserController = require('../controllers/UserController');
 const validateToken = require('../middlewares/validateToken');
+const isAdminMiddleware = require('../middlewares/isAdmin');
 
 const usersRoutes = new Router();
 
@@ -94,5 +95,53 @@ usersRoutes.delete(
 );
 //rota para pegar dados do usuário logado
 usersRoutes.get('/logged-user', validateToken, UserController.getLoggedUser);
+usersRoutes.put('/logged-user', validateToken, UserController.updateLoggedUser);
+
+// somente admins
+usersRoutes.get(
+  '/:id',
+  validateToken,
+  isAdminMiddleware,
+  UserController.getUserById
+);
+
+usersRoutes.put(
+  '/:id',
+  validateToken,
+  isAdminMiddleware,
+  UserController.updateUserById
+);
+
+usersRoutes.get(
+  '/',
+  validateToken,
+  isAdminMiddleware,
+  UserController.getAllUsers
+  /*
+    #swagger.tags = ['Usuários']
+    #swagger.description = 'Endpoint para listar todos os usuários. Acesso restrito a administradores.'
+    #swagger.responses[200] = {
+      description: 'Lista de usuários.',
+      schema: [
+        {
+          id: 1,
+          name: 'Admin Teste',
+          email: 'admin@admin.com',
+          // outros campos...
+        },
+        // outros usuários...
+      ]
+    }
+    #swagger.responses[401] = {
+      description: 'Usuário não autenticado.'
+    }
+    #swagger.responses[403] = {
+      description: 'Acesso negado. Apenas administradores podem acessar este recurso.'
+    }
+    #swagger.responses[500] = {
+      description: 'Erro interno do servidor.'
+    }
+  */
+);
 
 module.exports = usersRoutes;

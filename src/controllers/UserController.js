@@ -4,6 +4,10 @@ const CollectionPoint = require('../models/CollectionPoint');
 const UsersCountUseCase = require('../useCases/users/UsersCountUseCase');
 const UserCreateUseCase = require('../useCases/users/UserCreateUseCase');
 const UserGetLoggedUserUseCase = require('../useCases/users/UserGetLoggedUserUseCase');
+const UserUpdateLoggedUserUseCase = require('../useCases/users/UserUpdateLoggedUserUseCase');
+const UserGetByIdUseCase = require('../useCases/users/UserGetByIdUseCase');
+const UserUpdateByIdUseCase = require('../useCases/users/UserUpdateByIdUseCase');
+const UsersGetAllUseCase = require('../useCases/users/UsersGetAllUseCase');
 
 const {
   validateCPF,
@@ -147,9 +151,78 @@ const getLoggedUser = async (req, res) => {
   }
 };
 
+const updateLoggedUser = async (req, res) => {
+  const userUpdateLoggedUserUseCase = new UserUpdateLoggedUserUseCase();
+  try {
+    const updatedUser = await userUpdateLoggedUserUseCase.execute(
+      req.userId,
+      req.body
+    );
+
+    res.json(updatedUser);
+  } catch (error) {
+    console.error('Erro ao atualizar usuário:', error);
+    res.status(error.status || 500).json({ mensagem: error.message });
+  }
+};
+
+// metodos para o admin editar o usuário
+const getUserById = async (req, res) => {
+  const userGetByIdUseCase = new UserGetByIdUseCase();
+  try {
+    const user = await userGetByIdUseCase.execute(req.params.id);
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ mensagem: 'Usuário não encontrado // User not found' });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error('Erro ao buscar usuário:', error);
+    res
+      .status(error.status || 500)
+      .json({ mensagem: error.message || 'Erro interno do servidor' });
+  }
+};
+
+const updateUserById = async (req, res) => {
+  const userUpdateByIdUseCase = new UserUpdateByIdUseCase();
+  try {
+    const updatedUser = await userUpdateByIdUseCase.execute(
+      req.params.id,
+      req.body
+    );
+
+    res.json(updatedUser);
+  } catch (error) {
+    console.error('Erro ao atualizar usuário:', error);
+    res
+      .status(error.status || 500)
+      .json({ mensagem: error.message || 'Erro interno do servidor' });
+  }
+};
+
+const getAllUsers = async (req, res) => {
+  const usersGetAllUseCase = new UsersGetAllUseCase();
+
+  try {
+    const users = await usersGetAllUseCase.execute();
+    return res.status(200).json(users);
+  } catch (error) {
+    console.error('Erro ao listar usuários:', error);
+    return res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+};
+
 module.exports = {
   createUser,
   deleteUser,
   countUsers,
   getLoggedUser,
+  updateLoggedUser,
+  getUserById,
+  updateUserById,
+  getAllUsers,
 };

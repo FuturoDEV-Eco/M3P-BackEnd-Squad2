@@ -133,7 +133,6 @@ const getCollectionPointById = async (req, res) => {
   const collectionUseCase = new CollectionReadOneUseCase();
 
   try {
-    const userId = req.userId;
     const localId = req.params.local_id;
 
     const collectionPoint = await collectionUseCase.execute(userId, localId);

@@ -1,6 +1,3 @@
-
-
-
 const {
   validateAddress,
   validateRecycleTypes,
@@ -13,12 +10,12 @@ const CollectionCreateUseCase = require('../useCases/collectionsPoints/Collectio
 const CollectionReadOneUseCase = require('../useCases/collectionsPoints/CollectionReadOneUseCase');
 const CollectionDeleteUseCase = require('../useCases/collectionsPoints/CollectionDeleteUseCase');
 const CollectionUpdateUseCase = require('../useCases/collectionsPoints/CollectionUpdateUseCase');
+const CollectionCountAllUseCase = require('../useCases/collectionsPoints/CollectionCountAllUseCase');
 
 const createCollectionPoint = async (req, res) => {
+  const collectionUseCase = new CollectionCreateUseCase();
 
-  const collectionUseCase = new CollectionCreateUseCase()
-
-  try{
+  try {
     const {
       name,
       description,
@@ -93,50 +90,52 @@ const createCollectionPoint = async (req, res) => {
       city,
       state,
       number,
-      latitude,   // latitude sendo passada
-      longitude,  // longitude sendo passada
-      map_link,   // map_link sendo passada
-      userId      // user_id sendo passado
-    )
+      latitude, // latitude sendo passada
+      longitude, // longitude sendo passada
+      map_link, // map_link sendo passada
+      userId // user_id sendo passado
+    );
 
-    return res.status(201).json(collectionCreate)
-
-  }catch (error) {
-    console.error('Erro interno do servidor:', error);
-    return res.status(500).json({ error: 'Erro interno do servidor // Internal Server Error' });
-  }
-}
-
-const listUserCollectionPoints = async (req, res) => {
-  const collectionUseCase = new CollectionReadUseCase()
-
-  try {
-    const userId = req.userId
-
-    const collectionRead = await collectionUseCase.execute(userId)
-
-    if (!collectionRead[0]){
-      return res.status(404).json({mensagem:"Nenhum ponto de coleta a ser exibido"})
-    }
-
-    return res.status(200).json(collectionRead)
-
+    return res.status(201).json(collectionCreate);
   } catch (error) {
     console.error('Erro interno do servidor:', error);
     return res
       .status(500)
       .json({ error: 'Erro interno do servidor // Internal Server Error' });
-  }}
+  }
+};
+
+const listUserCollectionPoints = async (req, res) => {
+  const collectionUseCase = new CollectionReadUseCase();
+
+  try {
+    const userId = req.userId;
+
+    const collectionRead = await collectionUseCase.execute(userId);
+
+    if (!collectionRead[0]) {
+      return res
+        .status(404)
+        .json({ mensagem: 'Nenhum ponto de coleta a ser exibido' });
+    }
+
+    return res.status(200).json(collectionRead);
+  } catch (error) {
+    console.error('Erro interno do servidor:', error);
+    return res
+      .status(500)
+      .json({ error: 'Erro interno do servidor // Internal Server Error' });
+  }
+};
 
 const getCollectionPointById = async (req, res) => {
-
-  const collectionUseCase = new CollectionReadOneUseCase()
+  const collectionUseCase = new CollectionReadOneUseCase();
 
   try {
     const userId = req.userId;
     const localId = req.params.local_id;
 
-    const collectionPoint = await collectionUseCase.execute(userId, localId)
+    const collectionPoint = await collectionUseCase.execute(userId, localId);
 
     if (!collectionPoint) {
       return res
@@ -154,16 +153,13 @@ const getCollectionPointById = async (req, res) => {
 };
 
 const deleteCollectionPoint = async (req, res) => {
-
-  const collectionUseCase = new CollectionDeleteUseCase()
-
+  const collectionUseCase = new CollectionDeleteUseCase();
 
   try {
     const userId = req.userId;
     const localId = req.params.local_id;
 
-    const collectionPoint = await collectionUseCase.execute(userId, localId)
-
+    const collectionPoint = await collectionUseCase.execute(userId, localId);
 
     if (!collectionPoint) {
       return res
@@ -236,8 +232,6 @@ const updateCollectionPoint = async (req, res) => {
         .json({ error: recycleTypesError.message });
     }
 
-  
-
     // Chamar o use case para atualizar os dados
     const collectionUpdate = await collectionUseCase.execute(
       name,
@@ -249,7 +243,7 @@ const updateCollectionPoint = async (req, res) => {
       city,
       state,
       number,
-      postalcode,  // ou uma variável para o oldPostalcode
+      postalcode, // ou uma variável para o oldPostalcode
       userId,
       localId
     );
@@ -317,6 +311,19 @@ const countCollectionPoint = async (req, res) => {
     });
   }
 };
+const countAllCollectionPoint = async (req, res) => {
+  const collectionCountAllUseCase = new CollectionCountAllUseCase();
+
+  try {
+    const collectionCount = await collectionCountAllUseCase.execute();
+    return res.status(200).json({ count: collectionCount });
+  } catch (error) {
+    console.error('Erro interno do servidor:', error.message);
+    return res.status(500).json({
+      error: 'Erro interno do servidor // Internal Server Error',
+    });
+  }
+};
 module.exports = {
   createCollectionPoint,
   listUserCollectionPoints,
@@ -324,5 +331,6 @@ module.exports = {
   deleteCollectionPoint,
   updateCollectionPoint,
   getCollectionPointMapLink,
-  countCollectionPoint
+  countCollectionPoint,
+  countAllCollectionPoint,
 };

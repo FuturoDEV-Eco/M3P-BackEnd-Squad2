@@ -5,23 +5,7 @@ const isAdminMiddleware = require('../middlewares/isAdmin');
 
 const usersRoutes = new Router();
 
-usersRoutes.get(
-  '/count',
-  UserController.countUsers
-  /*
-    #swagger.tags = ['Usuários']
-    #swagger.description = 'Endpoint para contar o número total de usuários.'
-    #swagger.responses[200] = {
-      description: 'Número total de usuários.',
-      schema: {
-        count: 100
-      }
-    }
-    #swagger.responses[500] = {
-      description: 'Erro interno do servidor.'
-    }
-  */
-);
+usersRoutes.get('/count', UserController.countUsers);
 
 usersRoutes.post(
   '/criar',

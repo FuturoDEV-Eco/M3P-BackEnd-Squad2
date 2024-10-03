@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const CollectionPointController = require('../controllers/CollectionPointController');
 const validateToken = require('../middlewares/validateToken');
+const isAdminMiddleware = require('../middlewares/isAdmin');
 
 const collectionPointsRoutes = new Router();
 

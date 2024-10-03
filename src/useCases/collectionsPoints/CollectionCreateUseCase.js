@@ -1,4 +1,4 @@
-const CollectionPoint = require("../../models/CollectionPoint");
+const CollectionPoint = require('../../models/CollectionPoint');
 
 class CollectionCreateUseCase {
   async execute(
@@ -11,10 +11,10 @@ class CollectionCreateUseCase {
     city,
     state,
     number,
-    latitude,      // Recebendo latitude
-    longitude,     // Recebendo longitude
-    map_link,      // Recebendo map_link
-    userId         // Recebendo user_id
+    latitude, // Recebendo latitude
+    longitude, // Recebendo longitude
+    map_link, // Recebendo map_link
+    userId // Recebendo user_id
   ) {
     try {
       const collectionPoint = await CollectionPoint.create({
@@ -27,10 +27,10 @@ class CollectionCreateUseCase {
         city: city,
         state: state,
         number: number,
-        latitude: latitude,     // Incluindo latitude
-        longitude: longitude,   // Incluindo longitude
-        map_link: map_link,     // Incluindo map_link
-        user_id: userId,        // Incluindo user_id
+        latitude: latitude,
+        longitude: longitude,
+        map_link: map_link,
+        user_id: userId,
       });
 
       return collectionPoint;

@@ -6,7 +6,6 @@ module.exports = {
       'collection_points',
       [
         {
-          id: 1,
           name: 'Ecoponto Dakir Polidoro',
           description:
             'Ponto de coleta de vidros. Localizado no meio da rua. Coleta padrão da Comcap.',
@@ -25,7 +24,6 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 2,
           name: 'Fort - Campeche',
           description:
             'Fort Atacado - coleta de cápsulas de café Dolce Gusto e talvez outras marcas',
@@ -44,7 +42,6 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 3,
           name: 'Ecoponto Bistek',
           description: 'Ecoponto de coleta de lâmpadas e pilhas.',
           recycle_types: 'Lâmpadas',
@@ -62,7 +59,6 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 4,
           name: 'Farmácia Panvel',
           description: 'Coleta remédios vencidos e blisters vazios',
           recycle_types: 'Remédios ou blisters',
@@ -80,7 +76,6 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 5,
           name: 'Posto Galo Pedrita',
           description:
             'A cada 2L de óleo de cozinha usado, você ganha uma barra de sabão feita pela ong Todos Juntos',

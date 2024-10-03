@@ -177,4 +177,19 @@ collectionPointsRoutes.get(
   */
 );
 
+collectionPointsRoutes.get(
+  '/count',
+  CollectionPointController.countCollectionPoint
+  /*
+    #swagger.tags = ['Pontos de Coleta']
+    #swagger.description = 'Endpoint para obter a contagem total de pontos de coleta.'
+    #swagger.responses[200] = {
+      description: 'Contagem de pontos de coleta retornada com sucesso.'
+    }
+    #swagger.responses[500] = {
+      description: 'Erro interno do servidor.'
+    }
+  */
+);
+
 module.exports = collectionPointsRoutes;

@@ -11,6 +11,7 @@ const CollectionReadOneUseCase = require('../useCases/collectionsPoints/Collecti
 const CollectionDeleteUseCase = require('../useCases/collectionsPoints/CollectionDeleteUseCase');
 const CollectionUpdateUseCase = require('../useCases/collectionsPoints/CollectionUpdateUseCase');
 const CollectionCountAllUseCase = require('../useCases/collectionsPoints/CollectionCountAllUseCase');
+const CollectionListAllUseCase = require('../useCases/collectionsPoints/CollectionListAllUseCase');
 
 const createCollectionPoint = async (req, res) => {
   const collectionUseCase = new CollectionCreateUseCase();
@@ -324,6 +325,21 @@ const countAllCollectionPoint = async (req, res) => {
     });
   }
 };
+
+const listAllCollectionPoints = async (req, res) => {
+  const collectionListAllUseCase = new CollectionListAllUseCase();
+
+  try {
+    const collectionPoints = await collectionListAllUseCase.execute();
+    return res.status(200).json(collectionPoints);
+  } catch (error) {
+    console.error('Erro interno do servidor:', error.message);
+    return res
+      .status(500)
+      .json({ error: 'Erro interno do servidor // Internal Server Error' });
+  }
+};
+
 module.exports = {
   createCollectionPoint,
   listUserCollectionPoints,
@@ -333,4 +349,5 @@ module.exports = {
   getCollectionPointMapLink,
   countCollectionPoint,
   countAllCollectionPoint,
+  listAllCollectionPoints,
 };

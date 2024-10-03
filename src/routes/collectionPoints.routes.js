@@ -19,6 +19,21 @@ collectionPointsRoutes.get(
   */
 );
 
+collectionPointsRoutes.get(
+  '/all',
+  CollectionPointController.listAllCollectionPoints
+  /*
+    #swagger.tags = ['Pontos de Coleta']
+    #swagger.description = 'Endpoint para listar todos os pontos de coleta disponíveis no sistema.'
+    #swagger.responses[200] = {
+      description: 'Lista de pontos de coleta retornada com sucesso.'
+    }
+    #swagger.responses[500] = {
+      description: 'Erro interno do servidor.'
+    }
+  */
+);
+
 collectionPointsRoutes.post(
   '/',
   validateToken,

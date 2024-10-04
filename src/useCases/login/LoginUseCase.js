@@ -34,10 +34,18 @@ class LoginUseCase {
         };
       }
 
-      // Gerar o token JWT
+      console.log({
+        id: user.id,
+        name: user.name,
+        accent: user.accent, // Verifique o valor de accent
+        admin: user.admin, // Verifique o valor de admin
+      });
+      //Paiload
       const token = sign(
         {
           id: user.id,
+          name: user.name,
+          accent: user.accent,
           admin: user.admin,
         },
         process.env.JWT_SECRET,

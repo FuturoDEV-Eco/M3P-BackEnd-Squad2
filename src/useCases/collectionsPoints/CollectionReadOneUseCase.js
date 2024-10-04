@@ -11,7 +11,7 @@ class CollectionReadOneUseCase {
           {
             model: User,
             as: 'user',
-            attributes: ['name'], // Inclua mais atributos se necessário
+            attributes: ['name'],
           },
         ],
       });

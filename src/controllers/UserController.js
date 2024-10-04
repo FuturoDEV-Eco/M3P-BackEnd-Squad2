@@ -202,8 +202,6 @@ const getLoggedUser = async (req, res) => {
   }
 };
 
-o;
-
 const getAllUsers = async (req, res) => {
   const usersGetAllUseCase = new UsersGetAllUseCase();
 

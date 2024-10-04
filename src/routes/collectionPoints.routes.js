@@ -92,15 +92,34 @@ collectionPointsRoutes.get(
   CollectionPointController.getCollectionPointById
   /*
     #swagger.tags = ['Pontos de Coleta']
-    #swagger.description = 'Endpoint para obter detalhes de um ponto de coleta específico cadastrado pelo usuário autenticado. No momento do login, o id do usuário é armazenado no token. O endpoint usará esse id para garantir que apenas o usuário autenticado tenha acesso a essas informações.'
+    #swagger.description = 'Endpoint para obter detalhes de um ponto de coleta específico. O local é identificado pelo ID passado como parâmetro na URL. 
+    A autenticação é necessária para acessar este endpoint.'
     #swagger.parameters['local_id'] = {
-        in: 'path',
-        description: 'ID do ponto de coleta',
-        required: true,
-        type: 'integer'
+      in: 'path',
+      description: 'ID do ponto de coleta',
+      required: true,
+      type: 'integer'
     }
     #swagger.responses[200] = {
-      description: 'Detalhes do ponto de coleta retornados com sucesso.'
+      description: 'Detalhes do ponto de coleta retornados com sucesso.',
+      schema: {
+        id: 1,
+        name: 'Ponto Dakir Polidoro',
+        description: 'Ponto de coleta para reciclagem de vidro e plástico.',
+        recycle_types: 'Vidro, Plástico',
+        postalcode: '88063-565',
+        street: 'Rua Radialista Dakir Polidoro',
+        neighborhood: 'Campeche',
+        city: 'Florianópolis',
+        state: 'SC',
+        number: '123',
+        latitude: '-27.605',
+        longitude: '-48.453',
+        map_link: 'https://www.google.com/maps?q=-27.605,-48.453',
+        user: {
+          name: 'Admin Teste'
+        }
+      }
     }
     #swagger.responses[404] = {
       description: 'Ponto de coleta não encontrado.'

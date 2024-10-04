@@ -74,6 +74,26 @@ const createUser = async (req, res) => {
   }
 };
 
+const getUserById = async (req, res) => {
+  const userGetByIdUseCase = new UserGetByIdUseCase();
+  try {
+    const user = await userGetByIdUseCase.execute(req.params.id);
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ mensagem: 'Usuário não encontrado // User not found' });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error('Erro ao buscar usuário:', error);
+    res
+      .status(error.status || 500)
+      .json({ mensagem: error.message || 'Erro interno do servidor' });
+  }
+};
+
 const updateLoggedUser = async (req, res) => {
   const userUpdateUseCase = new UserUpdateUseCase();
   try {
@@ -209,25 +229,6 @@ const getLoggedUser = async (req, res) => {
 };
 
 // metodos para o admin editar o usuário
-const getUserById = async (req, res) => {
-  const userGetByIdUseCase = new UserGetByIdUseCase();
-  try {
-    const user = await userGetByIdUseCase.execute(req.params.id);
-
-    if (!user) {
-      return res
-        .status(404)
-        .json({ mensagem: 'Usuário não encontrado // User not found' });
-    }
-
-    res.json(user);
-  } catch (error) {
-    console.error('Erro ao buscar usuário:', error);
-    res
-      .status(error.status || 500)
-      .json({ mensagem: error.message || 'Erro interno do servidor' });
-  }
-};
 
 const getAllUsers = async (req, res) => {
   const usersGetAllUseCase = new UsersGetAllUseCase();

@@ -723,7 +723,7 @@
         "tags": [
           "Pontos de Coleta"
         ],
-        "description": "Endpoint para obter detalhes de um ponto de coleta específico cadastrado pelo usuário autenticado. No momento do login, o id do usuário é armazenado no token. O endpoint usará esse id para garantir que apenas o usuário autenticado tenha acesso a essas informações.",
+        "description": "Endpoint para obter detalhes de um ponto de coleta específico. O local é identificado pelo ID passado como parâmetro na URL. \r  A autenticação é necessária para acessar este endpoint.",
         "parameters": [
           {
             "name": "local_id",
@@ -740,7 +740,76 @@
         ],
         "responses": {
           "200": {
-            "description": "Detalhes do ponto de coleta retornados com sucesso."
+            "description": "Detalhes do ponto de coleta retornados com sucesso.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Ponto Dakir Polidoro"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Ponto de coleta para reciclagem de vidro e plástico."
+                },
+                "recycle_types": {
+                  "type": "string",
+                  "example": "Vidro, Plástico"
+                },
+                "postalcode": {
+                  "type": "string",
+                  "example": "88063-565"
+                },
+                "street": {
+                  "type": "string",
+                  "example": "Rua Radialista Dakir Polidoro"
+                },
+                "neighborhood": {
+                  "type": "string",
+                  "example": "Campeche"
+                },
+                "city": {
+                  "type": "string",
+                  "example": "Florianópolis"
+                },
+                "state": {
+                  "type": "string",
+                  "example": "SC"
+                },
+                "number": {
+                  "type": "string",
+                  "example": "123"
+                },
+                "latitude": {
+                  "type": "string",
+                  "example": "-27.605"
+                },
+                "longitude": {
+                  "type": "string",
+                  "example": "-48.453"
+                },
+                "map_link": {
+                  "type": "string",
+                  "example": "https://www.google.com/maps?q=-27.605,-48.453"
+                },
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "example": "Admin Teste"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "400": {
             "description": "Bad Request"
@@ -909,54 +978,6 @@
           },
           "404": {
             "description": "Ponto de coleta não encontrado."
-          },
-          "500": {
-            "description": "Erro interno do servidor."
-          }
-        }
-      }
-    },
-    "/local/{local_id}/maps": {
-      "get": {
-        "tags": [
-          "Pontos de Coleta"
-        ],
-        "description": "Endpoint para obter o link do Google Maps de um ponto de coleta específico cadastrado pelo usuário autenticado. Se o ponto de coleta não for encontrado, o sistema tentará gerar o link pelo CEP. Se o CEP não for encontrado, o endpoint retornará status 404 com a mensagem: O CEP não foi encontrado, então o link para o Google Maps é nulo // The postal code was not found, so the Google Maps link is null. Somente o usuário que criou o ponto de coleta pode acessar o link.",
-        "parameters": [
-          {
-            "name": "local_id",
-            "in": "path",
-            "required": true,
-            "type": "integer",
-            "description": "ID do ponto de coleta"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Link do Google Maps retornado com sucesso.",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "map_link": {
-                  "type": "string",
-                  "example": "https://www.google.com/maps?q=latitude,longitude"
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "404": {
-            "description": "Ponto de coleta ou CEP não encontrado."
           },
           "500": {
             "description": "Erro interno do servidor."

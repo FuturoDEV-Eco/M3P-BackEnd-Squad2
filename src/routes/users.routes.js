@@ -7,6 +7,12 @@ const usersRoutes = new Router();
 
 usersRoutes.get('/count', UserController.countUsers);
 
+usersRoutes.get(
+  '/:id/count-collect-points',
+  validateToken,
+  UserController.countUserCollectionPoints
+);
+
 usersRoutes.post(
   '/criar',
   UserController.createUser
@@ -121,6 +127,28 @@ usersRoutes.get(
     }
     #swagger.responses[403] = {
       description: 'Acesso negado. Apenas administradores podem acessar este recurso.'
+    }
+    #swagger.responses[500] = {
+      description: 'Erro interno do servidor.'
+    }
+  */
+);
+
+usersRoutes.get(
+  '/check-collection-points',
+  validateToken,
+  UserController.checkUserCollectionPoints
+  /*
+    #swagger.tags = ['Usuários']
+    #swagger.description = 'Endpoint para verificar se o usuário autenticado possui pontos de coleta. O ID do usuário é extraído do token JWT.'
+    #swagger.responses[200] = {
+      description: 'Verificação de pontos de coleta realizada com sucesso.',
+      schema: {
+        hasCollectionPoints: true
+      }
+    }
+    #swagger.responses[404] = {
+      description: 'Usuário não encontrado ou não possui pontos de coleta.'
     }
     #swagger.responses[500] = {
       description: 'Erro interno do servidor.'

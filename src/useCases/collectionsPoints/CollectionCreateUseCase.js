@@ -17,6 +17,9 @@ class CollectionCreateUseCase {
     userId // Recebendo user_id
   ) {
     try {
+      if (!latitude || !longitude) {
+        throw new Error('Latitude e Longitude são obrigatórias.');
+      }
       const collectionPoint = await CollectionPoint.create({
         name: name,
         description: description,

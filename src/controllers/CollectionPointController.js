@@ -257,47 +257,6 @@ const updateCollectionPoint = async (req, res) => {
   }
 };
 
-const getCollectionPointMapLink = async (req, res) => {
-  try {
-    const userId = req.userId;
-    const localId = req.params.local_id;
-
-    const collectionPoint = await CollectionPoint.findOne({
-      where: {
-        id: localId,
-        user_id: userId,
-      },
-    });
-
-    if (!collectionPoint) {
-      return res
-        .status(404)
-        .json({ error: 'Local não encontrado // Collection point not found' });
-    }
-
-    if (!collectionPoint.map_link) {
-      const locationData = await getMapLocal(collectionPoint.postalcode);
-      collectionPoint.latitude = locationData.lat;
-      collectionPoint.longitude = locationData.lon;
-      collectionPoint.map_link = await getGoogleMapsLink(locationData);
-      await collectionPoint.save();
-    }
-
-    if (!collectionPoint.map_link) {
-      return res.status(404).json({
-        error:
-          'O CEP não foi encontrado, então o link para o Google Maps é nulo // The postal code was not found, so the Google Maps link is null',
-      });
-    }
-
-    return res.status(200).json({ map_link: collectionPoint.map_link });
-  } catch (error) {
-    console.error('Erro interno do servidor:', error.message);
-    return res
-      .status(500)
-      .json({ error: 'Erro interno do servidor // Internal Server Error' });
-  }
-};
 const countCollectionPoint = async (req, res) => {
   const collectionCountUseCase = new CollectionCountUseCase();
 
@@ -345,7 +304,6 @@ module.exports = {
   getCollectionPointById,
   deleteCollectionPoint,
   updateCollectionPoint,
-  getCollectionPointMapLink,
   countCollectionPoint,
   countAllCollectionPoint,
   listAllCollectionPoints,

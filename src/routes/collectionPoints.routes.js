@@ -199,32 +199,4 @@ collectionPointsRoutes.put(
   */
 );
 
-collectionPointsRoutes.get(
-  '/:local_id/maps',
-  validateToken,
-  CollectionPointController.getCollectionPointMapLink
-  /*
-    #swagger.tags = ['Pontos de Coleta']
-    #swagger.description = 'Endpoint para obter o link do Google Maps de um ponto de coleta específico cadastrado pelo usuário autenticado. Se o ponto de coleta não for encontrado, o sistema tentará gerar o link pelo CEP. Se o CEP não for encontrado, o endpoint retornará status 404 com a mensagem: O CEP não foi encontrado, então o link para o Google Maps é nulo // The postal code was not found, so the Google Maps link is null. Somente o usuário que criou o ponto de coleta pode acessar o link.'
-    #swagger.parameters['local_id'] = {
-        in: 'path',
-        description: 'ID do ponto de coleta',
-        required: true,
-        type: 'integer'
-    }
-    #swagger.responses[200] = {
-      description: 'Link do Google Maps retornado com sucesso.',
-      schema: {
-        map_link: 'https://www.google.com/maps?q=latitude,longitude'
-      }
-    }
-    #swagger.responses[404] = {
-      description: 'Ponto de coleta ou CEP não encontrado.'
-    }
-    #swagger.responses[500] = {
-      description: 'Erro interno do servidor.'
-    }
-  */
-);
-
 module.exports = collectionPointsRoutes;

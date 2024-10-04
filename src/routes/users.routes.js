@@ -79,7 +79,10 @@ usersRoutes.post(
         $neighborhood: "Pântano do Sul",
         $city: "Florianópolis",
         $state: "SC",
-        $number: "634"
+        $number: "634",
+        $admin: false,
+        $aaccent: 1
+
       }
     }
     #swagger.responses[201] = {

@@ -33,13 +33,6 @@ class LoginUseCase {
             'A senha ou o e-mail estão incorretos // The password or email is incorrect',
         };
       }
-
-      console.log({
-        id: user.id,
-        name: user.name,
-        accent: user.accent, // Verifique o valor de accent
-        admin: user.admin, // Verifique o valor de admin
-      });
       //Paiload
       const token = sign(
         {

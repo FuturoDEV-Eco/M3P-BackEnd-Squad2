@@ -266,6 +266,14 @@
                 "number": {
                   "type": "string",
                   "example": "634"
+                },
+                "admin": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "aaccent": {
+                  "type": "number",
+                  "example": 1
                 }
               },
               "required": [
@@ -280,7 +288,9 @@
                 "neighborhood",
                 "city",
                 "state",
-                "number"
+                "number",
+                "admin",
+                "aaccent"
               ]
             }
           }

@@ -5,7 +5,6 @@ const { sign } = require('jsonwebtoken');
 class LoginUseCase {
   async execute(data) {
     if (!data.email || !data.password) {
-      console.error('Validation Error: Email and password are required');
       throw {
         status: 400,
         message:
@@ -15,13 +14,10 @@ class LoginUseCase {
 
     try {
       const user = await User.findOne({
-        where: {
-          email: data.email,
-        },
+        where: { email: data.email },
       });
 
       if (!user) {
-        console.error('User Not Found:', data.email);
         throw {
           status: 404,
           message: 'Usuário não encontrado // User not found',
@@ -31,7 +27,6 @@ class LoginUseCase {
       const passwordOk = await compare(data.password, user.password);
 
       if (!passwordOk) {
-        console.error('Incorrect Password for email:', data.email);
         throw {
           status: 401,
           message:
@@ -39,10 +34,11 @@ class LoginUseCase {
         };
       }
 
+      // Gerar o token JWT
       const token = sign(
         {
           id: user.id,
-          isAdmin: user.admin,
+          admin: user.admin,
         },
         process.env.JWT_SECRET,
         {
@@ -51,22 +47,17 @@ class LoginUseCase {
       );
 
       return {
-        token: token,
+        token,
         id: user.id,
         name: user.name,
         accent: user.accent,
-        isAdmin: user.admin,
+        admin: user.admin,
       };
     } catch (error) {
-      console.error('Error in LoginUseCase:', error);
-      if (error.status && error.message) {
-        throw error; // Re-lança erros conhecidos
-      } else {
-        throw {
-          status: 500,
-          message: 'Erro interno do servidor // Internal Server Error',
-        };
-      }
+      throw {
+        status: 500,
+        message: 'Erro interno do servidor // Internal Server Error',
+      };
     }
   }
 }

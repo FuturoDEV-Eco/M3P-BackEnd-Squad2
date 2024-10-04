@@ -19,16 +19,6 @@
     }
   },
   "paths": {
-    "/": {
-      "get": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/login": {
       "post": {
         "tags": [
@@ -46,7 +36,7 @@
               "properties": {
                 "email": {
                   "type": "string",
-                  "example": "nelsonmarcosoliveira@kimmay.com.br"
+                  "example": "raquelninacosta@kof.com.mx"
                 },
                 "password": {
                   "type": "string",
@@ -66,17 +56,53 @@
             "schema": {
               "type": "object",
               "properties": {
-                "token": {
+                "type": {
                   "type": "string",
-                  "example": "string"
+                  "example": "object"
                 },
-                "id": {
-                  "type": "string",
-                  "example": "integer"
-                },
-                "name": {
-                  "type": "string",
-                  "example": "string"
+                "properties": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "Token JWT gerado para o usuário."
+                        }
+                      }
+                    },
+                    "id": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "integer"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "ID do usuário."
+                        }
+                      }
+                    },
+                    "name": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "string"
+                        },
+                        "description": {
+                          "type": "string",
+                          "example": "Nome do usuário."
+                        }
+                      }
+                    }
+                  }
                 }
               },
               "xml": {
@@ -96,37 +122,81 @@
         }
       }
     },
-    "/logout": {
-      "post": {
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/usuarios/count": {
       "get": {
         "tags": [
           "Usuários"
         ],
-        "description": "Endpoint para contar o número total de usuários.",
+        "description": "Endpoint para contar o número de usuários cadastrados.",
         "responses": {
           "200": {
-            "description": "Número total de usuários.",
+            "description": "Número de usuários retornado com sucesso.",
             "schema": {
               "type": "object",
               "properties": {
                 "count": {
                   "type": "number",
-                  "example": 100
+                  "example": 123
                 }
               },
               "xml": {
                 "name": "main"
               }
             }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Erro interno do servidor."
+          }
+        }
+      }
+    },
+    "/usuarios/{id}/count-collect-points": {
+      "get": {
+        "tags": [
+          "Usuários"
+        ],
+        "description": "Endpoint para contar o número de pontos de coleta relacionados ao usuário.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do usuário"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Número de pontos de coleta retornado com sucesso.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "collectionPointsCount": {
+                  "type": "number",
+                  "example": 5
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Usuário não autenticado."
+          },
+          "404": {
+            "description": "Usuário não encontrado."
           },
           "500": {
             "description": "Erro interno do servidor."
@@ -244,122 +314,326 @@
             "required": true,
             "type": "integer",
             "description": "ID do usuário"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "Usuário excluído com sucesso"
+            "description": "Usuário excluído com sucesso."
           },
           "400": {
-            "description": "Usuário possui pontos de coleta relacionados e não pode ser excluído"
-          },
-          "401": {
-            "description": "Unauthorized"
+            "description": "Usuário possui pontos de coleta relacionados e não pode ser excluído."
           },
           "403": {
-            "description": "Você somente pode excluir sua própria conta"
+            "description": "Você somente pode excluir sua própria conta."
           },
           "404": {
-            "description": "Usuário não encontrado"
+            "description": "Usuário não encontrado."
           },
           "500": {
-            "description": "Erro interno do servidor"
+            "description": "Erro interno do servidor."
           }
         }
       },
       "get": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
+        "tags": [
+          "Usuários"
         ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      },
-      "put": {
-        "description": "",
+        "description": "Endpoint para buscar usuário por ID. Acesso restrito a administradores.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "type": "integer",
+            "description": "ID do usuário"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Usuário retornado com sucesso.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Admin Teste"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "admin@admin.com"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Usuário não autenticado."
           },
           "403": {
-            "description": "Forbidden"
+            "description": "Acesso negado. Apenas administradores podem acessar este recurso."
+          },
+          "404": {
+            "description": "Usuário não encontrado."
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erro interno do servidor."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Usuários"
+        ],
+        "description": "Endpoint para atualizar usuário por ID. Acesso restrito a administradores.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do usuário"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "updateUser",
+            "in": "body",
+            "description": "Dados atualizados do usuário",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Nome atualizado"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "emailatualizado@exemplo.com"
+                }
+              },
+              "required": [
+                "name",
+                "email"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário atualizado com sucesso."
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Usuário não autenticado."
+          },
+          "403": {
+            "description": "Acesso negado. Apenas administradores podem acessar este recurso."
+          },
+          "404": {
+            "description": "Usuário não encontrado."
+          },
+          "500": {
+            "description": "Erro interno do servidor."
           }
         }
       }
     },
     "/usuarios/logged-user": {
       "get": {
-        "description": "",
+        "tags": [
+          "Usuários"
+        ],
+        "description": "Endpoint para buscar dados do usuário logado.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Dados do usuário retornados com sucesso.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Admin Teste"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "admin@admin.com"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Usuário não autenticado."
           },
           "404": {
             "description": "Not Found"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erro interno do servidor."
           }
         }
       },
       "put": {
-        "description": "",
+        "tags": [
+          "Usuários"
+        ],
+        "description": "Endpoint para atualizar dados do usuário logado.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "updateUser",
+            "in": "body",
+            "description": "Dados atualizados do usuário",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Nome atualizado"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "emailatualizado@exemplo.com"
+                }
+              },
+              "required": [
+                "name",
+                "email"
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Dados atualizados com sucesso."
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Usuário não autenticado."
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erro interno do servidor."
           }
         }
       }
     },
-    "/usuarios/": {
+    "/usuarios/check-collection-points": {
       "get": {
         "tags": [
           "Usuários"
         ],
-        "description": "Endpoint para listar todos os usuários. Acesso restrito a administradores.",
+        "description": "Endpoint para verificar se o usuário autenticado possui pontos de coleta. O ID do usuário é extraído do token JWT.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
         "responses": {
-          "401": {
-            "description": "Unauthorized"
+          "200": {
+            "description": "Verificação de pontos de coleta realizada com sucesso.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "hasCollectionPoints": {
+                  "type": "boolean",
+                  "example": true
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
-          "403": {
-            "description": "Forbidden"
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Usuário não encontrado ou não possui pontos de coleta."
+          },
+          "500": {
+            "description": "Erro interno do servidor."
+          }
+        }
+      }
+    },
+    "/local/count-all": {
+      "get": {
+        "tags": [
+          "Pontos de Coleta"
+        ],
+        "description": "Endpoint para obter a contagem total de pontos de coleta.",
+        "responses": {
+          "200": {
+            "description": "Contagem de pontos de coleta retornada com sucesso."
+          },
+          "500": {
+            "description": "Erro interno do servidor."
+          }
+        }
+      }
+    },
+    "/local/all": {
+      "get": {
+        "tags": [
+          "Pontos de Coleta"
+        ],
+        "description": "Endpoint para listar todos os pontos de coleta disponíveis no sistema.",
+        "responses": {
+          "200": {
+            "description": "Lista de pontos de coleta retornada com sucesso."
+          },
+          "500": {
+            "description": "Erro interno do servidor."
           }
         }
       }
@@ -371,6 +645,11 @@
         ],
         "description": "Endpoint para criar um ponto de coleta. Somente usuários autenticados podem criar um ponto de coleta e o ponto de coleta será veiculado ao usuário autenticado. Todos os campos são obrigatórios. Caso o CEP não seja encontrado na nominatim.openstreetmap, as colunas latitude, longitude e map_link serão preenchidas com null. Se tudo der certo, o sistema retornará status 201 com as informações do novo ponto de coleta. Se houver erro, o sistema retornará status 500 com a mensagem: Erro interno do servidor // Internal Server Error e o erro será exibido no console.",
         "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
           {
             "name": "criarPontoDeColeta",
             "in": "body",
@@ -440,9 +719,6 @@
           "400": {
             "description": "Dados inválidos fornecidos."
           },
-          "401": {
-            "description": "Unauthorized"
-          },
           "500": {
             "description": "Erro interno do servidor."
           }
@@ -453,12 +729,19 @@
           "Pontos de Coleta"
         ],
         "description": "Endpoint para listar todos os pontos de coleta cadastrados pelo usuário autenticado. No momento do login, o id do usuário é armazenado no token. O endpoint usará esse id para garantir que apenas o usuário veja os pontos de coleta que ele criou.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Lista de pontos de coleta retornada com sucesso."
           },
-          "401": {
-            "description": "Unauthorized"
+          "400": {
+            "description": "Bad Request"
           },
           "404": {
             "description": "Not Found"
@@ -482,14 +765,19 @@
             "required": true,
             "type": "integer",
             "description": "ID do ponto de coleta"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "Detalhes do ponto de coleta retornados com sucesso."
           },
-          "401": {
-            "description": "Unauthorized"
+          "400": {
+            "description": "Bad Request"
           },
           "404": {
             "description": "Ponto de coleta não encontrado."
@@ -511,6 +799,11 @@
             "required": true,
             "type": "integer",
             "description": "ID do ponto de coleta"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
           },
           {
             "name": "body",
@@ -553,8 +846,8 @@
           "200": {
             "description": "Ponto de coleta excluído com sucesso."
           },
-          "401": {
-            "description": "Unauthorized"
+          "400": {
+            "description": "Bad Request"
           },
           "404": {
             "description": "Ponto de coleta não encontrado."
@@ -576,6 +869,11 @@
             "required": true,
             "type": "integer",
             "description": "ID do ponto de coleta"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
           },
           {
             "name": "atualizarPontoDeColeta",
@@ -643,9 +941,6 @@
           "400": {
             "description": "Dados inválidos fornecidos."
           },
-          "401": {
-            "description": "Unauthorized"
-          },
           "404": {
             "description": "Ponto de coleta não encontrado."
           },
@@ -668,6 +963,11 @@
             "required": true,
             "type": "integer",
             "description": "ID do ponto de coleta"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
           }
         ],
         "responses": {
@@ -686,8 +986,8 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized"
+          "400": {
+            "description": "Bad Request"
           },
           "404": {
             "description": "Ponto de coleta ou CEP não encontrado."

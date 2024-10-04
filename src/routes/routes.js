@@ -11,10 +11,6 @@ const routes = Router();
 
 routes.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-routes.get('/', (req, res) => {
-  res.send('Hello World! Destino Certo dando um "salve" no planeta.');
-});
-
 routes.post(
   '/login',
   LoginController.login
@@ -26,16 +22,19 @@ routes.post(
         description: 'Login do usuário',
         required: true,
         schema: { 
-            $email: "nelsonmarcosoliveira@kimmay.com.br",
+            $email: "raquelninacosta@kof.com.mx",
             $password: "Teste123!"
         }
     }
     #swagger.responses[200] = {
       description: 'Login bem-sucedido, token gerado com sucesso.',
       schema: {
-        token: "string",
-        id: "integer",
-        name: "string"
+        type: 'object',
+        properties: {
+          token: { type: 'string', description: 'Token JWT gerado para o usuário.' },
+          id: { type: 'integer', description: 'ID do usuário.' },
+          name: { type: 'string', description: 'Nome do usuário.' }
+        }
       }
     }
     #swagger.responses[400] = {
@@ -49,15 +48,6 @@ routes.post(
     }
   */
 );
-
-routes.post('/logout', (req, res) => {
-  res.clearCookie('destinoCertoToken', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-  });
-  res.status(200).json({ mensagem: 'Logout realizado com sucesso' });
-});
 
 routes.use('/usuarios', usersRoutes);
 routes.use('/local', collectionPointsRoutes);

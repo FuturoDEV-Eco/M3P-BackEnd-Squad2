@@ -8,7 +8,6 @@ const UserUpdateUseCase = require('../useCases/users/UserUpdateUseCase');
 const UserGetByIdUseCase = require('../useCases/users/UserGetByIdUseCase');
 const UsersGetAllUseCase = require('../useCases/users/UsersGetAllUseCase');
 const DeleteUserUseCase = require('../useCases/users/UseDeleteUseCase.js');
-const UserCheckCollectionPointsUseCase = require('../useCases/users/UserCheckCollectionPointsUseCase');
 const UserCountCollectPointsUseCase = require('../useCases/users/UserCountCollectPointsUseCase');
 
 const {
@@ -128,30 +127,6 @@ const updateUserById = async (req, res) => {
   }
 };
 
-// Método para verificar se o usuário autenticado possui pontos de coleta
-const checkUserCollectionPoints = async (req, res) => {
-  const userCheckCollectionPointsUseCase =
-    new UserCheckCollectionPointsUseCase();
-
-  try {
-    const result = await userCheckCollectionPointsUseCase.execute(req.userId);
-
-    if (result.hasCollectionPoints) {
-      return res.status(200).json({ hasCollectionPoints: true });
-    } else {
-      return res.status(404).json({
-        hasCollectionPoints: false,
-        message: 'Usuário não possui pontos de coleta.',
-      });
-    }
-  } catch (error) {
-    console.error('Erro ao verificar pontos de coleta:', error.message);
-    return res
-      .status(500)
-      .json({ error: 'Erro interno do servidor // Internal Server Error' });
-  }
-};
-
 const deleteUser = async (req, res) => {
   try {
     const userId = req.userId; // ID do usuário autenticado
@@ -263,6 +238,5 @@ module.exports = {
   getLoggedUser,
   getUserById,
   getAllUsers,
-  checkUserCollectionPoints,
   countUserCollectionPoints,
 };

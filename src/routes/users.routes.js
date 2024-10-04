@@ -5,7 +5,6 @@ const isAdminMiddleware = require('../middlewares/isAdmin');
 
 const usersRoutes = new Router();
 
-// Contar o número de usuários
 usersRoutes.get(
   '/count',
   UserController.countUsers
@@ -24,7 +23,6 @@ usersRoutes.get(
   */
 );
 
-// Contar pontos de coleta relacionados ao usuário logado
 usersRoutes.get(
   '/:id/count-collect-points',
   validateToken,
@@ -56,7 +54,6 @@ usersRoutes.get(
   */
 );
 
-// Criar um novo usuário
 usersRoutes.post(
   '/criar',
   UserController.createUser
@@ -100,7 +97,6 @@ usersRoutes.post(
   */
 );
 
-// Excluir um usuário
 usersRoutes.delete(
   '/:id',
   validateToken,
@@ -132,7 +128,6 @@ usersRoutes.delete(
   */
 );
 
-// Buscar dados do usuário logado
 usersRoutes.get(
   '/logged-user',
   validateToken,
@@ -157,7 +152,6 @@ usersRoutes.get(
   */
 );
 
-// Atualizar dados do usuário logado
 usersRoutes.put(
   '/logged-user',
   validateToken,
@@ -186,7 +180,6 @@ usersRoutes.put(
   */
 );
 
-// Buscar usuário por ID (admin)
 usersRoutes.get(
   '/:id',
   validateToken,
@@ -224,7 +217,36 @@ usersRoutes.get(
   */
 );
 
-// Atualizar usuário por ID (admin)
+// Atualizar os próprios dados (usuário logado)
+usersRoutes.put(
+  '/logged-user',
+  validateToken,
+  UserController.updateLoggedUser
+  /*
+    #swagger.tags = ['Usuários']
+    #swagger.description = 'Endpoint para o usuário logado atualizar seus próprios dados.'
+    #swagger.parameters['updateUser'] = {
+      in: 'body',
+      description: 'Dados atualizados do usuário',
+      required: true,
+      schema: {
+        $name: "Nome atualizado",
+        $email: "emailatualizado@exemplo.com"
+      }
+    }
+    #swagger.responses[200] = {
+      description: 'Dados atualizados com sucesso.'
+    }
+    #swagger.responses[401] = {
+      description: 'Usuário não autenticado.'
+    }
+    #swagger.responses[500] = {
+      description: 'Erro interno do servidor.'
+    }
+  */
+);
+
+// Atualizar os dados de qualquer usuário (administrador)
 usersRoutes.put(
   '/:id',
   validateToken,
@@ -232,10 +254,10 @@ usersRoutes.put(
   UserController.updateUserById
   /*
     #swagger.tags = ['Usuários']
-    #swagger.description = 'Endpoint para atualizar usuário por ID. Acesso restrito a administradores.'
+    #swagger.description = 'Endpoint para o administrador atualizar os dados de qualquer usuário.'
     #swagger.parameters['id'] = {
       in: 'path',
-      description: 'ID do usuário',
+      description: 'ID do usuário a ser atualizado.',
       required: true,
       type: 'integer'
     }
@@ -266,7 +288,6 @@ usersRoutes.put(
   */
 );
 
-// Verificar se o usuário autenticado possui pontos de coleta
 usersRoutes.get(
   '/check-collection-points',
   validateToken,

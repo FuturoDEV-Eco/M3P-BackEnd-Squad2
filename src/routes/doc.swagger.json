@@ -413,14 +413,14 @@
         "tags": [
           "Usuários"
         ],
-        "description": "Endpoint para atualizar usuário por ID. Acesso restrito a administradores.",
+        "description": "Endpoint para o administrador atualizar os dados de qualquer usuário.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
             "type": "integer",
-            "description": "ID do usuário"
+            "description": "ID do usuário a ser atualizado."
           },
           {
             "name": "authorization",
@@ -528,7 +528,7 @@
         "tags": [
           "Usuários"
         ],
-        "description": "Endpoint para atualizar dados do usuário logado.",
+        "description": "Endpoint para o usuário logado atualizar seus próprios dados.",
         "parameters": [
           {
             "name": "authorization",

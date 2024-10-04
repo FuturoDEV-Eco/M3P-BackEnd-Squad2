@@ -5,20 +5,16 @@ function validateToken(request, response, next) {
     const authorizationHeader = request.headers.authorization;
 
     if (!authorizationHeader) {
-      return response
-        .status(400)
-        .json({
-          mensagem: 'Seu token é obrigatório // Your token is required',
-        });
+      return response.status(400).json({
+        mensagem: 'Seu token é obrigatório // Your token is required',
+      });
     }
 
     const parts = authorizationHeader.split(' ');
     if (parts.length !== 2 || parts[0] !== 'Bearer') {
-      return response
-        .status(400)
-        .json({
-          mensagem: 'Formato do token inválido // Invalid token format',
-        });
+      return response.status(400).json({
+        mensagem: 'Formato do token inválido // Invalid token format',
+      });
     }
 
     const token = parts[1];
@@ -29,7 +25,6 @@ function validateToken(request, response, next) {
 
     next();
   } catch (error) {
-    console.log('Token validation error:', error);
     if (error.name === 'TokenExpiredError') {
       return response
         .status(401)

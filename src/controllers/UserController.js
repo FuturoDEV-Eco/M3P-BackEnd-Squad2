@@ -26,7 +26,6 @@ function validateUserData(data) {
   validationError = validateName(data.name);
   if (validationError) return validationError;
 
-  // Remover caracteres não numéricos do CPF antes da validação
   data.cpf = data.cpf.replace(/[^\d]+/g, '');
   validationError = validateCPF(data.cpf);
   if (validationError) return validationError;
@@ -43,7 +42,7 @@ function validateUserData(data) {
   validationError = validateBirthdate(data.birthdate);
   if (validationError) return validationError;
 
-  data.postalcode = data.postalcode.replace(/[^\d]+/g, ''); // Remove caracteres não numéricos do CEP
+  data.postalcode = data.postalcode.replace(/[^\d]+/g, '');
   validationError = validateAddress(
     data.postalcode,
     data.street,
@@ -129,8 +128,8 @@ const updateUserById = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   try {
-    const userId = req.userId; // ID do usuário autenticado
-    const userToDeleteId = req.params.id; // ID do usuário a ser deletado
+    const userId = req.userId; //
+    const userToDeleteId = req.params.id;
 
     // Verifica se o usuário está tentando deletar sua própria conta
     if (userId !== parseInt(userToDeleteId)) {
@@ -203,7 +202,7 @@ const getLoggedUser = async (req, res) => {
   }
 };
 
-// metodos para o admin editar o usuário
+o;
 
 const getAllUsers = async (req, res) => {
   const usersGetAllUseCase = new UsersGetAllUseCase();
@@ -217,7 +216,7 @@ const getAllUsers = async (req, res) => {
   }
 };
 const countUserCollectionPoints = async (req, res) => {
-  const { id } = req.params; // Obtém o ID do usuário da rota
+  const { id } = req.params;
   const userCountCollectPointsUseCase = new UserCountCollectPointsUseCase();
 
   try {

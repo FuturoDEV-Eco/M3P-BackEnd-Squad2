@@ -20,6 +20,7 @@ function validateToken(request, response, next) {
     const token = parts[1];
 
     const result = verify(token, process.env.JWT_SECRET);
+
     request.userId = result.id;
     request.admin = result.admin;
 

@@ -346,66 +346,6 @@
           }
         }
       },
-      "get": {
-        "tags": [
-          "Usuários"
-        ],
-        "description": "Endpoint para buscar usuário por ID. Acesso restrito a administradores.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "integer",
-            "description": "ID do usuário"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Usuário retornado com sucesso.",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "number",
-                  "example": 1
-                },
-                "name": {
-                  "type": "string",
-                  "example": "Admin Teste"
-                },
-                "email": {
-                  "type": "string",
-                  "example": "admin@admin.com"
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Usuário não autenticado."
-          },
-          "403": {
-            "description": "Acesso negado. Apenas administradores podem acessar este recurso."
-          },
-          "404": {
-            "description": "Usuário não encontrado."
-          },
-          "500": {
-            "description": "Erro interno do servidor."
-          }
-        }
-      },
       "put": {
         "tags": [
           "Usuários"
@@ -451,6 +391,66 @@
         "responses": {
           "200": {
             "description": "Usuário atualizado com sucesso."
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Usuário não autenticado."
+          },
+          "403": {
+            "description": "Acesso negado. Apenas administradores podem acessar este recurso."
+          },
+          "404": {
+            "description": "Usuário não encontrado."
+          },
+          "500": {
+            "description": "Erro interno do servidor."
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Usuários"
+        ],
+        "description": "Endpoint para buscar usuário por ID. Acesso restrito a administradores.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "ID do usuário"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário retornado com sucesso.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Admin Teste"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "admin@admin.com"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "400": {
             "description": "Bad Request"
@@ -572,6 +572,38 @@
         }
       }
     },
+    "/usuarios/users-list-all": {
+      "get": {
+        "tags": [
+          "Usuários"
+        ],
+        "description": "Endpoint para listar todos os usuários. Acesso restrito a administradores.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários retornada com sucesso."
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Usuário não autenticado."
+          },
+          "403": {
+            "description": "Acesso negado. Apenas administradores podem acessar este recurso."
+          },
+          "500": {
+            "description": "Erro interno do servidor."
+          }
+        }
+      }
+    },
     "/local/count-all": {
       "get": {
         "tags": [
@@ -676,9 +708,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          },
           "201": {
             "description": "Ponto de coleta criado com sucesso."
           },
@@ -839,42 +868,6 @@
             "name": "authorization",
             "in": "header",
             "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "example": "any"
-                },
-                "description": {
-                  "example": "any"
-                },
-                "recycle_types": {
-                  "example": "any"
-                },
-                "postalcode": {
-                  "example": "any"
-                },
-                "street": {
-                  "example": "any"
-                },
-                "neighborhood": {
-                  "example": "any"
-                },
-                "city": {
-                  "example": "any"
-                },
-                "state": {
-                  "example": "any"
-                },
-                "number": {
-                  "example": "any"
-                }
-              }
-            }
           }
         ],
         "responses": {

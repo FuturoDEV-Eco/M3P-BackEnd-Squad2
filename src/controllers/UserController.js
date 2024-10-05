@@ -203,10 +203,10 @@ const getLoggedUser = async (req, res) => {
 };
 
 const getAllUsers = async (req, res) => {
-  const usersGetAllUseCase = new UsersGetAllUseCase();
+  const usersGetAllUseCase = new UsersGetAllUseCase(); // Certo aqui
 
   try {
-    const users = await usersGetAllUseCase.execute();
+    const users = await usersGetAllUseCase.execute(); // Lista todos os usuários
     return res.status(200).json(users);
   } catch (error) {
     console.error('Erro ao listar usuários:', error);

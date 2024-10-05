@@ -1,7 +1,7 @@
 const CollectionPoint = require('../../models/CollectionPoint');
 
 class CollectionCreateUseCase {
-  async execute(
+  async execute({
     name,
     description,
     recycle_types,
@@ -11,15 +11,16 @@ class CollectionCreateUseCase {
     city,
     state,
     number,
-    latitude, // Recebendo latitude
-    longitude, // Recebendo longitude
-    map_link, // Recebendo map_link
-    userId // Recebendo user_id
-  ) {
+    latitude,
+    longitude,
+    map_link,
+    userId,
+  }) {
     try {
       if (!latitude || !longitude) {
         throw new Error('Latitude e Longitude são obrigatórias.');
       }
+
       const collectionPoint = await CollectionPoint.create({
         name: name,
         description: description,

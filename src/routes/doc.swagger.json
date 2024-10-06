@@ -206,17 +206,11 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          },
           "201": {
             "description": "Usuário criado com sucesso."
           },
           "400": {
             "description": "Dados inválidos fornecidos."
-          },
-          "404": {
-            "description": "Not Found"
           },
           "409": {
             "description": "CPF ou email já existem."
@@ -371,6 +365,9 @@
           "400": {
             "description": "Bad Request"
           },
+          "404": {
+            "description": "Not Found"
+          },
           "500": {
             "description": "Erro interno do servidor."
           }
@@ -436,7 +433,31 @@
             "schema": {
               "type": "object",
               "properties": {
-                "where": {
+                "name": {
+                  "example": "any"
+                },
+                "description": {
+                  "example": "any"
+                },
+                "recycle_types": {
+                  "example": "any"
+                },
+                "postalcode": {
+                  "example": "any"
+                },
+                "street": {
+                  "example": "any"
+                },
+                "neighborhood": {
+                  "example": "any"
+                },
+                "city": {
+                  "example": "any"
+                },
+                "state": {
+                  "example": "any"
+                },
+                "number": {
                   "example": "any"
                 }
               }

@@ -80,6 +80,14 @@ const User = connection.define(
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
+    admin: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    accent: {
+      type: DataTypes.INTEGER,
+      defaultValue: 1,
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,

@@ -92,15 +92,34 @@ collectionPointsRoutes.get(
   CollectionPointController.getCollectionPointById
   /*
     #swagger.tags = ['Pontos de Coleta']
-    #swagger.description = 'Endpoint para obter detalhes de um ponto de coleta específico cadastrado pelo usuário autenticado. No momento do login, o id do usuário é armazenado no token. O endpoint usará esse id para garantir que apenas o usuário autenticado tenha acesso a essas informações.'
+    #swagger.description = 'Endpoint para obter detalhes de um ponto de coleta específico. O local é identificado pelo ID passado como parâmetro na URL. 
+    A autenticação é necessária para acessar este endpoint.'
     #swagger.parameters['local_id'] = {
-        in: 'path',
-        description: 'ID do ponto de coleta',
-        required: true,
-        type: 'integer'
+      in: 'path',
+      description: 'ID do ponto de coleta',
+      required: true,
+      type: 'integer'
     }
     #swagger.responses[200] = {
-      description: 'Detalhes do ponto de coleta retornados com sucesso.'
+      description: 'Detalhes do ponto de coleta retornados com sucesso.',
+      schema: {
+        id: 1,
+        name: 'Ponto Dakir Polidoro',
+        description: 'Ponto de coleta para reciclagem de vidro e plástico.',
+        recycle_types: 'Vidro, Plástico',
+        postalcode: '88063-565',
+        street: 'Rua Radialista Dakir Polidoro',
+        neighborhood: 'Campeche',
+        city: 'Florianópolis',
+        state: 'SC',
+        number: '123',
+        latitude: '-27.605',
+        longitude: '-48.453',
+        map_link: 'https://www.google.com/maps?q=-27.605,-48.453',
+        user: {
+          name: 'Admin Teste'
+        }
+      }
     }
     #swagger.responses[404] = {
       description: 'Ponto de coleta não encontrado.'
@@ -173,34 +192,6 @@ collectionPointsRoutes.put(
     }
     #swagger.responses[400] = {
       description: 'Dados inválidos fornecidos.'
-    }
-    #swagger.responses[500] = {
-      description: 'Erro interno do servidor.'
-    }
-  */
-);
-
-collectionPointsRoutes.get(
-  '/:local_id/maps',
-  validateToken,
-  CollectionPointController.getCollectionPointMapLink
-  /*
-    #swagger.tags = ['Pontos de Coleta']
-    #swagger.description = 'Endpoint para obter o link do Google Maps de um ponto de coleta específico cadastrado pelo usuário autenticado. Se o ponto de coleta não for encontrado, o sistema tentará gerar o link pelo CEP. Se o CEP não for encontrado, o endpoint retornará status 404 com a mensagem: O CEP não foi encontrado, então o link para o Google Maps é nulo // The postal code was not found, so the Google Maps link is null. Somente o usuário que criou o ponto de coleta pode acessar o link.'
-    #swagger.parameters['local_id'] = {
-        in: 'path',
-        description: 'ID do ponto de coleta',
-        required: true,
-        type: 'integer'
-    }
-    #swagger.responses[200] = {
-      description: 'Link do Google Maps retornado com sucesso.',
-      schema: {
-        map_link: 'https://www.google.com/maps?q=latitude,longitude'
-      }
-    }
-    #swagger.responses[404] = {
-      description: 'Ponto de coleta ou CEP não encontrado.'
     }
     #swagger.responses[500] = {
       description: 'Erro interno do servidor.'

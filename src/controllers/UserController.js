@@ -1,7 +1,9 @@
 const User = require('../models/User');
 const CollectionPoint = require('../models/CollectionPoint');
 
-const UsersCountUseCase = require('../usecases/UsersCountUseCase');
+const UsersCountUseCase = require('../useCases/users/UsersCountUseCase');
+const UserCreateUseCase = require('../useCases/users/UserCreateUseCase');
+const UserGetLoggedUserUseCase = require('../useCases/users/UserGetLoggedUserUseCase');
 
 const {
   validateCPF,
@@ -52,45 +54,17 @@ function validateUserData(data) {
 
 const createUser = async (req, res) => {
   const userData = req.body;
-
-  // Validar os dados da requisição
-  const validationError = validateUserData(userData);
-  if (validationError) {
-    console.error('Validation Error:', validationError.message);
-    return res
-      .status(validationError.status)
-      .json({ error: validationError.message });
-  }
+  const userCreateUseCase = new UserCreateUseCase();
 
   try {
-    // Verificar se o CPF já existe
-    const cpfExists = await User.findOne({ where: { cpf: userData.cpf } });
-    if (cpfExists) {
-      console.error('CPF Already Exists:', userData.cpf);
-      return res
-        .status(409)
-        .json({ error: 'CPF já existe // CPF already exists' });
-    }
-
-    // Verificar se o email já existe
-    const emailExists = await User.findOne({
-      where: { email: userData.email },
-    });
-    if (emailExists) {
-      console.error('Email Already Exists:', userData.email);
-      return res
-        .status(409)
-        .json({ error: 'Email já existe // Email already exists' });
-    }
-
-    // Criar o usuário
-    const user = await User.create(userData);
+    const user = await userCreateUseCase.execute(userData);
     return res.status(201).json(user);
   } catch (error) {
-    console.error('Internal Server Error:', error);
-    return res
-      .status(500)
-      .json({ error: 'Erro interno do servidor // Internal Server Error' });
+    console.error('Error in createUser:', error);
+    const status = error.status || 500;
+    const message =
+      error.message || 'Erro interno do servidor // Internal Server Error';
+    return res.status(status).json({ error: message });
   }
 };
 
@@ -153,8 +127,29 @@ const countUsers = async (req, res) => {
   }
 };
 
+const getLoggedUser = async (req, res) => {
+  const userGetLoggedUserUseCase = new UserGetLoggedUserUseCase();
+  try {
+    const user = await userGetLoggedUserUseCase.execute(req.userId);
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ mensagem: 'Usuário não encontrado // User not found' });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error('Erro ao buscar usuário:', error);
+    res
+      .status(500)
+      .json({ mensagem: 'Erro interno do servidor // Internal Server Error' });
+  }
+};
+
 module.exports = {
   createUser,
   deleteUser,
   countUsers,
+  getLoggedUser,
 };

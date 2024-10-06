@@ -1,4 +1,6 @@
-const CollectionPoint = require('../models/CollectionPoint');
+
+
+
 const {
   validateAddress,
   validateRecycleTypes,
@@ -6,9 +8,17 @@ const {
   validateDescription,
 } = require('../utils/validation');
 const { getMapLocal, getGoogleMapsLink } = require('../services/mapService');
+const CollectionReadUseCase = require('../useCases/collectionsPoints/CollectionReadUseCase');
+const CollectionCreateUseCase = require('../useCases/collectionsPoints/CollectionCreateUseCase');
+const CollectionReadOneUseCase = require('../useCases/collectionsPoints/CollectionReadOneUseCase');
+const CollectionDeleteUseCase = require('../useCases/collectionsPoints/CollectionDeleteUseCase');
+const CollectionUpdateUseCase = require('../useCases/collectionsPoints/CollectionUpdateUseCase');
 
 const createCollectionPoint = async (req, res) => {
-  try {
+
+  const collectionUseCase = new CollectionCreateUseCase()
+
+  try{
     const {
       name,
       description,
@@ -72,57 +82,61 @@ const createCollectionPoint = async (req, res) => {
       );
     }
 
-    // Create collection point
-    const collectionPoint = await CollectionPoint.create({
+    // Chame o use case com todas as variáveis necessárias
+    const collectionCreate = await collectionUseCase.execute(
       name,
       description,
       recycle_types,
-      postalcode: postalcode.replace(/[^\d]+/g, ''),
+      postalcode,
       street,
       neighborhood,
       city,
       state,
       number,
-      latitude,
-      longitude,
-      map_link,
-      user_id: userId,
-    });
+      latitude,   // latitude sendo passada
+      longitude,  // longitude sendo passada
+      map_link,   // map_link sendo passada
+      userId      // user_id sendo passado
+    )
 
-    return res.status(201).json(collectionPoint);
-  } catch (error) {
-    console.error('Internal Server Error:', error.message); // Log the error message
-    return res
-      .status(500)
-      .json({ error: 'Erro interno do servidor // Internal Server Error' });
+    return res.status(201).json(collectionCreate)
+
+  }catch (error) {
+    console.error('Erro interno do servidor:', error);
+    return res.status(500).json({ error: 'Erro interno do servidor // Internal Server Error' });
   }
-};
+}
+
 const listUserCollectionPoints = async (req, res) => {
+  const collectionUseCase = new CollectionReadUseCase()
+
   try {
-    const userId = req.userId;
-    const collectionPoints = await CollectionPoint.findAll({
-      where: { user_id: userId },
-    });
-    return res.status(200).json(collectionPoints);
+    const userId = req.userId
+
+    const collectionRead = await collectionUseCase.execute(userId)
+
+    if (!collectionRead[0]){
+      return res.status(404).json({mensagem:"Nenhum ponto de coleta a ser exibido"})
+    }
+
+    return res.status(200).json(collectionRead)
+
   } catch (error) {
     console.error('Erro interno do servidor:', error);
     return res
       .status(500)
       .json({ error: 'Erro interno do servidor // Internal Server Error' });
-  }
-};
+  }}
 
 const getCollectionPointById = async (req, res) => {
+
+  const collectionUseCase = new CollectionReadOneUseCase()
+
   try {
     const userId = req.userId;
     const localId = req.params.local_id;
 
-    const collectionPoint = await CollectionPoint.findOne({
-      where: {
-        id: localId,
-        user_id: userId,
-      },
-    });
+    const collectionPoint = await collectionUseCase.execute(userId, localId)
 
     if (!collectionPoint) {
       return res
@@ -140,16 +154,16 @@ const getCollectionPointById = async (req, res) => {
 };
 
 const deleteCollectionPoint = async (req, res) => {
+
+  const collectionUseCase = new CollectionDeleteUseCase()
+
+
   try {
     const userId = req.userId;
     const localId = req.params.local_id;
 
-    const collectionPoint = await CollectionPoint.findOne({
-      where: {
-        id: localId,
-        user_id: userId,
-      },
-    });
+    const collectionPoint = await collectionUseCase.execute(userId, localId)
+
 
     if (!collectionPoint) {
       return res
@@ -157,7 +171,6 @@ const deleteCollectionPoint = async (req, res) => {
         .json({ error: 'Local não encontrado // Collection point not found' });
     }
 
-    await collectionPoint.destroy();
     return res.status(200).json({
       message:
         'Local excluído com sucesso // Collection point successfully deleted',
@@ -171,9 +184,12 @@ const deleteCollectionPoint = async (req, res) => {
 };
 
 const updateCollectionPoint = async (req, res) => {
+  const collectionUseCase = new CollectionUpdateUseCase();
+
   try {
     const userId = req.userId;
-    const localId = req.params.local_id;
+    const localId = req.params.local_id; // Obter o localId do parâmetro da requisição
+
     const {
       name,
       description,
@@ -195,62 +211,50 @@ const updateCollectionPoint = async (req, res) => {
       state,
       number
     );
-    if (validationError)
+    if (validationError) {
       return res
         .status(validationError.status)
         .json({ error: validationError.message });
+    }
 
     const nameError = validateName(name);
-    if (nameError)
+    if (nameError) {
       return res.status(nameError.status).json({ error: nameError.message });
+    }
 
     const descriptionError = validateDescription(description);
-    if (descriptionError)
+    if (descriptionError) {
       return res
         .status(descriptionError.status)
         .json({ error: descriptionError.message });
+    }
 
     const recycleTypesError = validateRecycleTypes(recycle_types);
-    if (recycleTypesError)
+    if (recycleTypesError) {
       return res
         .status(recycleTypesError.status)
         .json({ error: recycleTypesError.message });
-
-    const collectionPoint = await CollectionPoint.findOne({
-      where: {
-        id: localId,
-        user_id: userId,
-      },
-    });
-
-    if (!collectionPoint) {
-      return res
-        .status(404)
-        .json({ error: 'Local não encontrado // Collection point not found' });
     }
 
-    // Atualizar ponto de coleta
-    collectionPoint.name = name;
-    collectionPoint.description = description;
-    collectionPoint.recycle_types = recycle_types;
-    const oldPostalcode = collectionPoint.postalcode;
-    collectionPoint.postalcode = postalcode.replace(/[^\d]+/g, '');
-    collectionPoint.street = street;
-    collectionPoint.neighborhood = neighborhood;
-    collectionPoint.city = city;
-    collectionPoint.state = state;
-    collectionPoint.number = number;
+  
 
-    // Buscar dados de localização se o CEP tiver sido alterado
-    if (oldPostalcode !== collectionPoint.postalcode) {
-      const locationData = await getMapLocal(collectionPoint.postalcode);
-      collectionPoint.latitude = locationData.lat;
-      collectionPoint.longitude = locationData.lon;
-      collectionPoint.map_link = await getGoogleMapsLink(locationData);
-    }
+    // Chamar o use case para atualizar os dados
+    const collectionUpdate = await collectionUseCase.execute(
+      name,
+      description,
+      recycle_types,
+      postalcode,
+      street,
+      neighborhood,
+      city,
+      state,
+      number,
+      postalcode,  // ou uma variável para o oldPostalcode
+      userId,
+      localId
+    );
 
-    await collectionPoint.save();
-    return res.status(200).json(collectionPoint);
+    return res.status(200).json(collectionUpdate);
   } catch (error) {
     console.error('Erro interno do servidor:', error.message);
     return res
@@ -300,7 +304,19 @@ const getCollectionPointMapLink = async (req, res) => {
       .json({ error: 'Erro interno do servidor // Internal Server Error' });
   }
 };
+const countCollectionPoint = async (req, res) => {
+  const collectionCountUseCase = new CollectionCountUseCase();
 
+  try {
+    const collectionCount = await collectionCountUseCase.execute();
+    return res.status(200).json({ count: collectionCount });
+  } catch (error) {
+    console.error('Internal Server Error:', error.message);
+    return res.status(500).json({
+      error: 'Erro interno do servidor // Internal Server Error',
+    });
+  }
+};
 module.exports = {
   createCollectionPoint,
   listUserCollectionPoints,
@@ -308,4 +324,5 @@ module.exports = {
   deleteCollectionPoint,
   updateCollectionPoint,
   getCollectionPointMapLink,
+  countCollectionPoint
 };

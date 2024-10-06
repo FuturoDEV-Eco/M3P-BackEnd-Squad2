@@ -92,5 +92,7 @@ usersRoutes.delete(
         }
     */
 );
+//rota para pegar dados do usuário logado
+usersRoutes.get('/logged-user', validateToken, UserController.getLoggedUser);
 
 module.exports = usersRoutes;

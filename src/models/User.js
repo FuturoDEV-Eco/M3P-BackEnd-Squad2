@@ -81,11 +81,11 @@ const User = connection.define(
       allowNull: false,
     },
     admin: {
-      type: DataTypes.BOOLEAN, // Certifique-se de que admin está definido corretamente
+      type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
     accent: {
-      type: DataTypes.INTEGER, // Certifique-se de que accent está corretamente definido
+      type: DataTypes.INTEGER,
       defaultValue: 1,
     },
     createdAt: {

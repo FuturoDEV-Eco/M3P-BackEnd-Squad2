@@ -252,6 +252,29 @@ usersRoutes.put(
 );
 
 usersRoutes.get(
+  '/users-list-all',
+  validateToken,
+  isAdminMiddleware,
+  UserController.getAllUsers
+  /*
+    #swagger.tags = ['Usuários']
+    #swagger.description = 'Endpoint para listar todos os usuários. Acesso restrito a administradores.'
+    #swagger.responses[200] = {
+      description: 'Lista de usuários retornada com sucesso.'
+    }
+    #swagger.responses[401] = {
+      description: 'Usuário não autenticado.'
+    }
+    #swagger.responses[403] = {
+      description: 'Acesso negado. Apenas administradores podem acessar este recurso.'
+    }
+    #swagger.responses[500] = {
+      description: 'Erro interno do servidor.'
+    }
+  */
+);
+
+usersRoutes.get(
   '/:id',
   validateToken,
   UserController.getUserById
@@ -280,29 +303,6 @@ usersRoutes.get(
     }
     #swagger.responses[404] = {
       description: 'Usuário não encontrado.'
-    }
-    #swagger.responses[500] = {
-      description: 'Erro interno do servidor.'
-    }
-  */
-);
-
-usersRoutes.get(
-  '/users-list-all',
-  validateToken,
-  isAdminMiddleware,
-  UserController.getAllUsers
-  /*
-    #swagger.tags = ['Usuários']
-    #swagger.description = 'Endpoint para listar todos os usuários. Acesso restrito a administradores.'
-    #swagger.responses[200] = {
-      description: 'Lista de usuários retornada com sucesso.'
-    }
-    #swagger.responses[401] = {
-      description: 'Usuário não autenticado.'
-    }
-    #swagger.responses[403] = {
-      description: 'Acesso negado. Apenas administradores podem acessar este recurso.'
     }
     #swagger.responses[500] = {
       description: 'Erro interno do servidor.'

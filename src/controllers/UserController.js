@@ -4,12 +4,10 @@ const CollectionPoint = require('../models/CollectionPoint');
 const UsersCountUseCase = require('../useCases/users/UsersCountUseCase');
 const UserCreateUseCase = require('../useCases/users/UserCreateUseCase');
 const UserGetLoggedUserUseCase = require('../useCases/users/UserGetLoggedUserUseCase');
-const UserUpdateLoggedUserUseCase = require('../useCases/users/UserUpdateLoggedUserUseCase');
+const UserUpdateUseCase = require('../useCases/users/UserUpdateUseCase');
 const UserGetByIdUseCase = require('../useCases/users/UserGetByIdUseCase');
-const UserUpdateByIdUseCase = require('../useCases/users/UserUpdateByIdUseCase');
 const UsersGetAllUseCase = require('../useCases/users/UsersGetAllUseCase');
 const DeleteUserUseCase = require('../useCases/users/UseDeleteUseCase.js');
-const UserCheckCollectionPointsUseCase = require('../useCases/users/UserCheckCollectionPointsUseCase');
 const UserCountCollectPointsUseCase = require('../useCases/users/UserCountCollectPointsUseCase');
 
 const {
@@ -28,7 +26,6 @@ function validateUserData(data) {
   validationError = validateName(data.name);
   if (validationError) return validationError;
 
-  // Remover caracteres não numéricos do CPF antes da validação
   data.cpf = data.cpf.replace(/[^\d]+/g, '');
   validationError = validateCPF(data.cpf);
   if (validationError) return validationError;
@@ -45,7 +42,7 @@ function validateUserData(data) {
   validationError = validateBirthdate(data.birthdate);
   if (validationError) return validationError;
 
-  data.postalcode = data.postalcode.replace(/[^\d]+/g, ''); // Remove caracteres não numéricos do CEP
+  data.postalcode = data.postalcode.replace(/[^\d]+/g, '');
   validationError = validateAddress(
     data.postalcode,
     data.street,
@@ -75,34 +72,64 @@ const createUser = async (req, res) => {
   }
 };
 
-// Método para verificar se o usuário autenticado possui pontos de coleta
-const checkUserCollectionPoints = async (req, res) => {
-  const userCheckCollectionPointsUseCase =
-    new UserCheckCollectionPointsUseCase();
-
+const getUserById = async (req, res) => {
+  const userGetByIdUseCase = new UserGetByIdUseCase();
   try {
-    const result = await userCheckCollectionPointsUseCase.execute(req.userId);
+    const user = await userGetByIdUseCase.execute(req.params.id);
 
-    if (result.hasCollectionPoints) {
-      return res.status(200).json({ hasCollectionPoints: true });
-    } else {
-      return res.status(404).json({
-        hasCollectionPoints: false,
-        message: 'Usuário não possui pontos de coleta.',
-      });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ mensagem: 'Usuário não encontrado // User not found' });
     }
+
+    res.json(user);
   } catch (error) {
-    console.error('Erro ao verificar pontos de coleta:', error.message);
-    return res
-      .status(500)
-      .json({ error: 'Erro interno do servidor // Internal Server Error' });
+    console.error('Erro ao buscar usuário:', error);
+    res
+      .status(error.status || 500)
+      .json({ mensagem: error.message || 'Erro interno do servidor' });
+  }
+};
+
+const updateLoggedUser = async (req, res) => {
+  const userUpdateUseCase = new UserUpdateUseCase();
+  try {
+    const updatedUser = await userUpdateUseCase.execute(
+      req.userId,
+      req.body,
+      req.userId,
+      req.admin
+    );
+
+    res.json(updatedUser);
+  } catch (error) {
+    console.error('Erro ao atualizar usuário:', error);
+    res.status(error.status || 500).json({ mensagem: error.message });
+  }
+};
+
+const updateUserById = async (req, res) => {
+  const userUpdateUseCase = new UserUpdateUseCase();
+  try {
+    const updatedUser = await userUpdateUseCase.execute(
+      req.params.id,
+      req.body,
+      req.userId,
+      req.admin
+    );
+
+    res.json(updatedUser);
+  } catch (error) {
+    console.error('Erro ao atualizar usuário:', error);
+    res.status(error.status || 500).json({ mensagem: error.message });
   }
 };
 
 const deleteUser = async (req, res) => {
   try {
-    const userId = req.userId; // ID do usuário autenticado
-    const userToDeleteId = req.params.id; // ID do usuário a ser deletado
+    const userId = req.userId; //
+    const userToDeleteId = req.params.id;
 
     // Verifica se o usuário está tentando deletar sua própria conta
     if (userId !== parseInt(userToDeleteId)) {
@@ -175,59 +202,6 @@ const getLoggedUser = async (req, res) => {
   }
 };
 
-const updateLoggedUser = async (req, res) => {
-  const userUpdateLoggedUserUseCase = new UserUpdateLoggedUserUseCase();
-  try {
-    const updatedUser = await userUpdateLoggedUserUseCase.execute(
-      req.userId,
-      req.body
-    );
-
-    res.json(updatedUser);
-  } catch (error) {
-    console.error('Erro ao atualizar usuário:', error);
-    res.status(error.status || 500).json({ mensagem: error.message });
-  }
-};
-
-// metodos para o admin editar o usuário
-const getUserById = async (req, res) => {
-  const userGetByIdUseCase = new UserGetByIdUseCase();
-  try {
-    const user = await userGetByIdUseCase.execute(req.params.id);
-
-    if (!user) {
-      return res
-        .status(404)
-        .json({ mensagem: 'Usuário não encontrado // User not found' });
-    }
-
-    res.json(user);
-  } catch (error) {
-    console.error('Erro ao buscar usuário:', error);
-    res
-      .status(error.status || 500)
-      .json({ mensagem: error.message || 'Erro interno do servidor' });
-  }
-};
-
-const updateUserById = async (req, res) => {
-  const userUpdateByIdUseCase = new UserUpdateByIdUseCase();
-  try {
-    const updatedUser = await userUpdateByIdUseCase.execute(
-      req.params.id,
-      req.body
-    );
-
-    res.json(updatedUser);
-  } catch (error) {
-    console.error('Erro ao atualizar usuário:', error);
-    res
-      .status(error.status || 500)
-      .json({ mensagem: error.message || 'Erro interno do servidor' });
-  }
-};
-
 const getAllUsers = async (req, res) => {
   const usersGetAllUseCase = new UsersGetAllUseCase();
 
@@ -240,7 +214,7 @@ const getAllUsers = async (req, res) => {
   }
 };
 const countUserCollectionPoints = async (req, res) => {
-  const { id } = req.params; // Obtém o ID do usuário da rota
+  const { id } = req.params;
   const userCountCollectPointsUseCase = new UserCountCollectPointsUseCase();
 
   try {
@@ -254,13 +228,12 @@ const countUserCollectionPoints = async (req, res) => {
 
 module.exports = {
   createUser,
+  updateLoggedUser,
+  updateUserById,
   deleteUser,
   countUsers,
   getLoggedUser,
-  updateLoggedUser,
   getUserById,
-  updateUserById,
   getAllUsers,
-  checkUserCollectionPoints,
   countUserCollectionPoints,
 };

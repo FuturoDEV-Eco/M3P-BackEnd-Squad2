@@ -27,9 +27,10 @@ const createCollectionPoint = async (req, res) => {
       city,
       state,
       number,
+      latitude,
+      longitude,
     } = req.body;
 
-    // Validate address
     const validationError = validateAddress(
       postalcode,
       street,
@@ -38,50 +39,56 @@ const createCollectionPoint = async (req, res) => {
       state,
       number
     );
-    if (validationError)
+    if (validationError) {
       return res
         .status(validationError.status)
         .json({ error: validationError.message });
+    }
 
     // Validate name
     const nameError = validateName(name);
-    if (nameError)
+    if (nameError) {
       return res.status(nameError.status).json({ error: nameError.message });
+    }
 
     // Validate description
     const descriptionError = validateDescription(description);
-    if (descriptionError)
+    if (descriptionError) {
       return res
         .status(descriptionError.status)
         .json({ error: descriptionError.message });
+    }
 
     // Validate recycle types
     const recycleTypesError = validateRecycleTypes(recycle_types);
-    if (recycleTypesError)
+    if (recycleTypesError) {
       return res
         .status(recycleTypesError.status)
         .json({ error: recycleTypesError.message });
+    }
 
     // Get user ID from token
     const userId = req.userId;
 
-    // Fetch location data
-    const locationData = await getMapLocal(postalcode);
-    let latitude = null;
-    let longitude = null;
+    let lat = latitude || null;
+    let lon = longitude || null;
     let map_link = null;
-    if (locationData) {
-      latitude = locationData.lat;
-      longitude = locationData.lon;
-      map_link = await getGoogleMapsLink(locationData);
-    } else {
-      console.error(
-        'Não foi possível obter a localização do mapa: Erro ao chamar a API de mapas. Valores de Latitude, Longitude e Link para o mapa serão null // Impossible to get location data. Latitude, Longitude and Map Link are null'
-      );
+
+    if (!lat || !lon) {
+      // Se latitude e longitude não forem enviadas, buscar via API
+      const locationData = await getMapLocal(postalcode);
+      if (locationData) {
+        lat = locationData.lat;
+        lon = locationData.lon;
+        map_link = await getGoogleMapsLink(locationData);
+      } else {
+        console.error(
+          'Não foi possível obter a localização do mapa: Erro ao chamar a API de mapas. Valores de Latitude, Longitude e Link para o mapa serão null'
+        );
+      }
     }
 
-    // Chame o use case com todas as variáveis necessárias
-    const collectionCreate = await collectionUseCase.execute(
+    const collectionCreate = await collectionUseCase.execute({
       name,
       description,
       recycle_types,
@@ -91,11 +98,11 @@ const createCollectionPoint = async (req, res) => {
       city,
       state,
       number,
-      latitude, // latitude sendo passada
-      longitude, // longitude sendo passada
-      map_link, // map_link sendo passada
-      userId // user_id sendo passado
-    );
+      latitude: lat,
+      longitude: lon,
+      map_link,
+      userId,
+    });
 
     return res.status(201).json(collectionCreate);
   } catch (error) {
@@ -135,7 +142,7 @@ const getCollectionPointById = async (req, res) => {
   try {
     const localId = req.params.local_id;
 
-    const collectionPoint = await collectionUseCase.execute(userId, localId);
+    const collectionPoint = await collectionUseCase.execute(localId);
 
     if (!collectionPoint) {
       return res
@@ -257,47 +264,6 @@ const updateCollectionPoint = async (req, res) => {
   }
 };
 
-const getCollectionPointMapLink = async (req, res) => {
-  try {
-    const userId = req.userId;
-    const localId = req.params.local_id;
-
-    const collectionPoint = await CollectionPoint.findOne({
-      where: {
-        id: localId,
-        user_id: userId,
-      },
-    });
-
-    if (!collectionPoint) {
-      return res
-        .status(404)
-        .json({ error: 'Local não encontrado // Collection point not found' });
-    }
-
-    if (!collectionPoint.map_link) {
-      const locationData = await getMapLocal(collectionPoint.postalcode);
-      collectionPoint.latitude = locationData.lat;
-      collectionPoint.longitude = locationData.lon;
-      collectionPoint.map_link = await getGoogleMapsLink(locationData);
-      await collectionPoint.save();
-    }
-
-    if (!collectionPoint.map_link) {
-      return res.status(404).json({
-        error:
-          'O CEP não foi encontrado, então o link para o Google Maps é nulo // The postal code was not found, so the Google Maps link is null',
-      });
-    }
-
-    return res.status(200).json({ map_link: collectionPoint.map_link });
-  } catch (error) {
-    console.error('Erro interno do servidor:', error.message);
-    return res
-      .status(500)
-      .json({ error: 'Erro interno do servidor // Internal Server Error' });
-  }
-};
 const countCollectionPoint = async (req, res) => {
   const collectionCountUseCase = new CollectionCountUseCase();
 
@@ -345,7 +311,6 @@ module.exports = {
   getCollectionPointById,
   deleteCollectionPoint,
   updateCollectionPoint,
-  getCollectionPointMapLink,
   countCollectionPoint,
   countAllCollectionPoint,
   listAllCollectionPoints,

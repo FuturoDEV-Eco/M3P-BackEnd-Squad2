@@ -1,5 +1,5 @@
 function isAdminMiddleware(req, res, next) {
-  if (req.isAdmin) {
+  if (req.admin) {
     next();
   } else {
     res.status(403).json({ mensagem: 'Acesso negado // Access denied' });

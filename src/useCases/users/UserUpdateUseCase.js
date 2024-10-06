@@ -1,9 +1,15 @@
 const User = require('../../models/User');
 
-class UserUpdateLoggedUserUseCase {
-  async execute(userId, data) {
+class UserUpdateUseCase {
+  async execute(userId, data, loggedUserId, isAdmin) {
     try {
-      // Atualizar os dados do usuário
+      if (userId !== loggedUserId && !isAdmin) {
+        throw {
+          status: 403,
+          message: 'Acesso negado // Access denied',
+        };
+      }
+
       const [updatedRowsCount] = await User.update(data, {
         where: { id: userId },
       });
@@ -15,7 +21,6 @@ class UserUpdateLoggedUserUseCase {
         };
       }
 
-      // Retornar os dados atualizados do usuário
       const updatedUser = await User.findByPk(userId, {
         attributes: [
           'id',
@@ -39,7 +44,7 @@ class UserUpdateLoggedUserUseCase {
 
       return updatedUser;
     } catch (error) {
-      console.error('Error in UserUpdateLoggedUserUseCase:', error);
+      console.error('Error in UserUpdateUseCase:', error);
       throw {
         status: error.status || 500,
         message:
@@ -49,4 +54,4 @@ class UserUpdateLoggedUserUseCase {
   }
 }
 
-module.exports = UserUpdateLoggedUserUseCase;
+module.exports = UserUpdateUseCase;

@@ -8,7 +8,7 @@ class CollectionListAllUseCase {
           {
             model: User,
             as: 'user',
-            attributes: ['name'], // Inclua outros atributos se necessário
+            attributes: ['name'],
           },
         ],
       });

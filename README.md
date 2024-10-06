@@ -110,6 +110,27 @@ npm run start:prod
     - Usuário não encontrado: 404 (Not Found).
     - Usuário com pontos de coleta: 400 (Bad Request) com mensagem explicativa.
     - Erro interno: 500 (Internal Server Error).
+      
+- **Edição de usuário:**
+  - Endpoint: `PUT /usuarios/:id`
+  - Validações:
+    - Não pode alterar o campo de CPF.
+  - Respostas:
+    - Sucesso: 200 (OK) com mensagem de sucesso.
+    - Usuário não encontrado: 404 (Not Found).
+    - Usuário com pontos de coleta: 400 (Bad Request) com mensagem explicativa.
+    - Erro interno: 500 (Internal Server Error).
+      
+- **Listagem de usuário:**
+  - Endpoint: `PUT /usuarios/`
+  - Validações:
+    - Não podendo exibir informações sensiveis do usuário.
+  
+  - Respostas:
+    - Sucesso: 200 (OK) com mensagem de sucesso.
+    - Usuário não encontrado: 404 (Not Found).
+    - Usuário com pontos de coleta: 400 (Bad Request) com mensagem explicativa.
+    - Erro interno: 500 (Internal Server Error).
 
 ### Pontos de Coleta
 
@@ -240,7 +261,10 @@ O projeto **Destino Certo - API** adota uma arquitetura inspirada no modelo MVC,
 
 ## Documentação com Swagger
 
-https://github.com/user-attachments/assets/e22eb0db-b928-45c5-8bc2-5986c89d016f
+
+https://github.com/user-attachments/assets/fdd82529-7a66-43b4-a197-46e5669b8556
+
+
 
 ### Visão Geral
 

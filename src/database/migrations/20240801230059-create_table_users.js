@@ -8,74 +8,74 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       name: {
         type: Sequelize.STRING(180),
-        allowNull: false
+        allowNull: false,
       },
       cpf: {
         type: Sequelize.STRING(11),
         allowNull: false,
-        unique: true
+        unique: true,
       },
       gender: {
         type: Sequelize.ENUM('M', 'F', 'O'),
-        allowNull: false
+        allowNull: false,
       },
       postalcode: {
         type: Sequelize.STRING(8),
-        allowNull: false
+        allowNull: false,
       },
       street: {
         type: Sequelize.STRING(180),
-        allowNull: false
+        allowNull: false,
       },
       neighborhood: {
         type: Sequelize.STRING(150),
-        allowNull: false
+        allowNull: false,
       },
       city: {
         type: Sequelize.STRING(100),
-        allowNull: false
+        allowNull: false,
       },
       state: {
         type: Sequelize.STRING(2),
-        allowNull: false
+        allowNull: false,
       },
       number: {
         type: Sequelize.STRING(10), // Alterado para STRING com comprimento 10 prevendo a possibilidade de usarem S/N
-        allowNull: false
+        allowNull: false,
       },
       complement: {
         type: Sequelize.STRING(30),
-        allowNull: true
+        allowNull: true,
       },
       email: {
         type: Sequelize.STRING(180),
         allowNull: false,
-        unique: true
+        unique: true,
       },
       password: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       birthdate: {
-        type: Sequelize.DATE,
-        allowNull: false
+        type: Sequelize.DATEONLY,
+        allowNull: false,
       },
       createdAt: {
         type: Sequelize.DATE,
-        allowNull: false
+        allowNull: false,
       },
       updatedAt: {
         type: Sequelize.DATE,
-        allowNull: false
-      }
+        allowNull: false,
+      },
     });
   },
 
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('users');
-  }
+  },
 };

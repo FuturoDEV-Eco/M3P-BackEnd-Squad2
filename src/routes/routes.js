@@ -60,6 +60,6 @@ routes.post('/logout', (req, res) => {
 });
 
 routes.use('/usuarios', usersRoutes);
-routes.use('/local', validateToken, collectionPointsRoutes);
+routes.use('/local', collectionPointsRoutes);
 
 module.exports = routes;

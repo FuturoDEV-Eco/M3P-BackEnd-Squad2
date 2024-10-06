@@ -96,6 +96,16 @@
         }
       }
     },
+    "/logout": {
+      "post": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/usuarios/count": {
       "get": {
         "tags": [
@@ -234,11 +244,6 @@
             "required": true,
             "type": "integer",
             "description": "ID do usuário"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
           }
         ],
         "responses": {
@@ -247,6 +252,9 @@
           },
           "400": {
             "description": "Usuário possui pontos de coleta relacionados e não pode ser excluído"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "403": {
             "description": "Você somente pode excluir sua própria conta"
@@ -258,6 +266,102 @@
             "description": "Erro interno do servidor"
           }
         }
+      },
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/usuarios/logged-user": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/usuarios/": {
+      "get": {
+        "tags": [
+          "Usuários"
+        ],
+        "description": "Endpoint para listar todos os usuários. Acesso restrito a administradores.",
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
       }
     },
     "/local/": {
@@ -267,11 +371,6 @@
         ],
         "description": "Endpoint para criar um ponto de coleta. Somente usuários autenticados podem criar um ponto de coleta e o ponto de coleta será veiculado ao usuário autenticado. Todos os campos são obrigatórios. Caso o CEP não seja encontrado na nominatim.openstreetmap, as colunas latitude, longitude e map_link serão preenchidas com null. Se tudo der certo, o sistema retornará status 201 com as informações do novo ponto de coleta. Se houver erro, o sistema retornará status 500 com a mensagem: Erro interno do servidor // Internal Server Error e o erro será exibido no console.",
         "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          },
           {
             "name": "criarPontoDeColeta",
             "in": "body",
@@ -341,6 +440,9 @@
           "400": {
             "description": "Dados inválidos fornecidos."
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "500": {
             "description": "Erro interno do servidor."
           }
@@ -351,19 +453,12 @@
           "Pontos de Coleta"
         ],
         "description": "Endpoint para listar todos os pontos de coleta cadastrados pelo usuário autenticado. No momento do login, o id do usuário é armazenado no token. O endpoint usará esse id para garantir que apenas o usuário veja os pontos de coleta que ele criou.",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
         "responses": {
           "200": {
             "description": "Lista de pontos de coleta retornada com sucesso."
           },
-          "400": {
-            "description": "Bad Request"
+          "401": {
+            "description": "Unauthorized"
           },
           "404": {
             "description": "Not Found"
@@ -387,19 +482,14 @@
             "required": true,
             "type": "integer",
             "description": "ID do ponto de coleta"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "Detalhes do ponto de coleta retornados com sucesso."
           },
-          "400": {
-            "description": "Bad Request"
+          "401": {
+            "description": "Unauthorized"
           },
           "404": {
             "description": "Ponto de coleta não encontrado."
@@ -421,11 +511,6 @@
             "required": true,
             "type": "integer",
             "description": "ID do ponto de coleta"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
           },
           {
             "name": "body",
@@ -468,8 +553,8 @@
           "200": {
             "description": "Ponto de coleta excluído com sucesso."
           },
-          "400": {
-            "description": "Bad Request"
+          "401": {
+            "description": "Unauthorized"
           },
           "404": {
             "description": "Ponto de coleta não encontrado."
@@ -491,11 +576,6 @@
             "required": true,
             "type": "integer",
             "description": "ID do ponto de coleta"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
           },
           {
             "name": "atualizarPontoDeColeta",
@@ -563,6 +643,9 @@
           "400": {
             "description": "Dados inválidos fornecidos."
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "404": {
             "description": "Ponto de coleta não encontrado."
           },
@@ -585,11 +668,6 @@
             "required": true,
             "type": "integer",
             "description": "ID do ponto de coleta"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
           }
         ],
         "responses": {
@@ -608,8 +686,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request"
+          "401": {
+            "description": "Unauthorized"
           },
           "404": {
             "description": "Ponto de coleta ou CEP não encontrado."

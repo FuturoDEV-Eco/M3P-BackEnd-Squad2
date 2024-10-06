@@ -1,21 +1,26 @@
-const CollectionPoint = require("../../models/CollectionPoint");
+const { CollectionPoint, User } = require('../../models');
 
+class CollectionReadOneUseCase {
+  async execute(localId) {
+    try {
+      const collectionPoint = await CollectionPoint.findOne({
+        where: {
+          id: localId,
+        },
+        include: [
+          {
+            model: User,
+            as: 'user',
+            attributes: ['name'], // Inclua mais atributos se necessário
+          },
+        ],
+      });
 
-class CollectionReadOneUseCase  {
-    async execute(userId, localId){
-
-        try{
-            const collectionPoints = await CollectionPoint.findOne({
-                where: {
-                  id: localId,
-                  user_id: userId,
-                },
-              });
-            return collectionPoints;
-        }catch(error){
-            throw new Error('Erro ao visualizar os pontos de coleta: ' + error.message);
-        }
+      return collectionPoint;
+    } catch (error) {
+      throw new Error('Erro ao visualizar o ponto de coleta: ' + error.message);
     }
+  }
 }
 
-module.exports = CollectionReadOneUseCase
+module.exports = CollectionReadOneUseCase;

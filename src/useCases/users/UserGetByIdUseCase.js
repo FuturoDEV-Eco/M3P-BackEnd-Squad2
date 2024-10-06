@@ -1,6 +1,6 @@
 const User = require('../../models/User');
 
-class UserGetLoggedUserUseCase {
+class UserGetByIdUseCase {
   async execute(userId) {
     try {
       const user = await User.findByPk(userId, {
@@ -26,7 +26,7 @@ class UserGetLoggedUserUseCase {
 
       return user;
     } catch (error) {
-      console.error('Error in UserGetLoggedUserUseCase:', error);
+      console.error('Error in UserGetByIdUseCase:', error);
       throw {
         status: 500,
         message: 'Erro ao obter usuário // Error fetching user',
@@ -35,4 +35,4 @@ class UserGetLoggedUserUseCase {
   }
 }
 
-module.exports = UserGetLoggedUserUseCase;
+module.exports = UserGetByIdUseCase;

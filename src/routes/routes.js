@@ -50,7 +50,16 @@ routes.post(
   */
 );
 
+routes.post('/logout', (req, res) => {
+  res.clearCookie('destinoCertoToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+  });
+  res.status(200).json({ mensagem: 'Logout realizado com sucesso' });
+});
+
 routes.use('/usuarios', usersRoutes);
-routes.use('/local', validateToken, collectionPointsRoutes);
+routes.use('/local', collectionPointsRoutes);
 
 module.exports = routes;

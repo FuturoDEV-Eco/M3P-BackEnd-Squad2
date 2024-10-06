@@ -3,6 +3,14 @@ const CollectionPoint = require('../models/CollectionPoint');
 
 const UsersCountUseCase = require('../useCases/users/UsersCountUseCase');
 const UserCreateUseCase = require('../useCases/users/UserCreateUseCase');
+const UserGetLoggedUserUseCase = require('../useCases/users/UserGetLoggedUserUseCase');
+const UserUpdateLoggedUserUseCase = require('../useCases/users/UserUpdateLoggedUserUseCase');
+const UserGetByIdUseCase = require('../useCases/users/UserGetByIdUseCase');
+const UserUpdateByIdUseCase = require('../useCases/users/UserUpdateByIdUseCase');
+const UsersGetAllUseCase = require('../useCases/users/UsersGetAllUseCase');
+const DeleteUserUseCase = require('../useCases/users/UseDeleteUseCase.js');
+const UserCheckCollectionPointsUseCase = require('../useCases/users/UserCheckCollectionPointsUseCase');
+const UserCountCollectPointsUseCase = require('../useCases/users/UserCountCollectPointsUseCase');
 
 const {
   validateCPF,
@@ -67,48 +75,69 @@ const createUser = async (req, res) => {
   }
 };
 
-const deleteUser = async (req, res) => {
+// Método para verificar se o usuário autenticado possui pontos de coleta
+const checkUserCollectionPoints = async (req, res) => {
+  const userCheckCollectionPointsUseCase =
+    new UserCheckCollectionPointsUseCase();
+
   try {
-    const userId = req.userId; // Obtém o ID do usuário autenticado
-    const userToDeleteId = req.params.id; // Obtém o ID do usuário a ser deletado
+    const result = await userCheckCollectionPointsUseCase.execute(req.userId);
 
-    // Verificar se o usuário autenticado está tentando deletar sua própria conta
-    if (userId !== parseInt(userToDeleteId)) {
-      return res.status(403).json({
-        error:
-          'Você somente pode excluir sua própria conta // You can only delete your own account',
+    if (result.hasCollectionPoints) {
+      return res.status(200).json({ hasCollectionPoints: true });
+    } else {
+      return res.status(404).json({
+        hasCollectionPoints: false,
+        message: 'Usuário não possui pontos de coleta.',
       });
     }
-
-    // Verificar se o usuário possui pontos de coleta registrados
-    const collectionPoints = await CollectionPoint.findOne({
-      where: { user_id: userId },
-    });
-    if (collectionPoints) {
-      return res.status(400).json({
-        error:
-          'Usuário possui pontos de coleta relacionados e não pode ser excluído // User has related collection points and cannot be deleted',
-      });
-    }
-
-    // Verificar se o usuário existe
-    const user = await User.findOne({ where: { id: userId } });
-    if (!user) {
-      return res
-        .status(404)
-        .json({ error: 'Usuário não encontrado // User not found' });
-    }
-
-    // Excluir o usuário
-    await user.destroy();
-    return res.status(200).json({
-      message: 'Usuário excluído com sucesso // User successfully deleted',
-    });
   } catch (error) {
-    console.error('Internal Server Error:', error.message);
+    console.error('Erro ao verificar pontos de coleta:', error.message);
     return res
       .status(500)
       .json({ error: 'Erro interno do servidor // Internal Server Error' });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  try {
+    const userId = req.userId; // ID do usuário autenticado
+    const userToDeleteId = req.params.id; // ID do usuário a ser deletado
+
+    // Verifica se o usuário está tentando deletar sua própria conta
+    if (userId !== parseInt(userToDeleteId)) {
+      return res
+        .status(403)
+        .json({ error: 'Você somente pode excluir sua própria conta.' });
+    }
+
+    // Verifica se o usuário tem pontos de coleta
+    const userCountCollectPointsUseCase = new UserCountCollectPointsUseCase();
+    const collectionPointsCount = await userCountCollectPointsUseCase.execute(
+      userToDeleteId
+    );
+
+    if (collectionPointsCount > 0) {
+      return res.status(400).json({
+        error:
+          'Usuário possui pontos de coleta relacionados e não pode ser excluído.',
+      });
+    }
+
+    // Se não houver pontos de coleta, chama o use case para deletar o usuário
+    const deleteUserUseCase = new DeleteUserUseCase();
+    const result = await deleteUserUseCase.execute(userId, userToDeleteId);
+
+    if (result.error) {
+      return res.status(result.status).json({ error: result.error });
+    }
+
+    return res.status(result.status).json({ message: result.message });
+  } catch (error) {
+    console.error('Internal Server Error:', error.message);
+    return res.status(500).json({
+      error: 'Erro interno do servidor // Internal Server Error',
+    });
   }
 };
 
@@ -126,8 +155,112 @@ const countUsers = async (req, res) => {
   }
 };
 
+const getLoggedUser = async (req, res) => {
+  const userGetLoggedUserUseCase = new UserGetLoggedUserUseCase();
+  try {
+    const user = await userGetLoggedUserUseCase.execute(req.userId);
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ mensagem: 'Usuário não encontrado // User not found' });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error('Erro ao buscar usuário:', error);
+    res
+      .status(500)
+      .json({ mensagem: 'Erro interno do servidor // Internal Server Error' });
+  }
+};
+
+const updateLoggedUser = async (req, res) => {
+  const userUpdateLoggedUserUseCase = new UserUpdateLoggedUserUseCase();
+  try {
+    const updatedUser = await userUpdateLoggedUserUseCase.execute(
+      req.userId,
+      req.body
+    );
+
+    res.json(updatedUser);
+  } catch (error) {
+    console.error('Erro ao atualizar usuário:', error);
+    res.status(error.status || 500).json({ mensagem: error.message });
+  }
+};
+
+// metodos para o admin editar o usuário
+const getUserById = async (req, res) => {
+  const userGetByIdUseCase = new UserGetByIdUseCase();
+  try {
+    const user = await userGetByIdUseCase.execute(req.params.id);
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ mensagem: 'Usuário não encontrado // User not found' });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error('Erro ao buscar usuário:', error);
+    res
+      .status(error.status || 500)
+      .json({ mensagem: error.message || 'Erro interno do servidor' });
+  }
+};
+
+const updateUserById = async (req, res) => {
+  const userUpdateByIdUseCase = new UserUpdateByIdUseCase();
+  try {
+    const updatedUser = await userUpdateByIdUseCase.execute(
+      req.params.id,
+      req.body
+    );
+
+    res.json(updatedUser);
+  } catch (error) {
+    console.error('Erro ao atualizar usuário:', error);
+    res
+      .status(error.status || 500)
+      .json({ mensagem: error.message || 'Erro interno do servidor' });
+  }
+};
+
+const getAllUsers = async (req, res) => {
+  const usersGetAllUseCase = new UsersGetAllUseCase();
+
+  try {
+    const users = await usersGetAllUseCase.execute();
+    return res.status(200).json(users);
+  } catch (error) {
+    console.error('Erro ao listar usuários:', error);
+    return res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+};
+const countUserCollectionPoints = async (req, res) => {
+  const { id } = req.params; // Obtém o ID do usuário da rota
+  const userCountCollectPointsUseCase = new UserCountCollectPointsUseCase();
+
+  try {
+    const count = await userCountCollectPointsUseCase.execute(id);
+    return res.status(200).json({ count });
+  } catch (error) {
+    console.error('Erro ao contar pontos de coleta:', error.message);
+    return res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+};
+
 module.exports = {
   createUser,
   deleteUser,
   countUsers,
+  getLoggedUser,
+  updateLoggedUser,
+  getUserById,
+  updateUserById,
+  getAllUsers,
+  checkUserCollectionPoints,
+  countUserCollectionPoints,
 };

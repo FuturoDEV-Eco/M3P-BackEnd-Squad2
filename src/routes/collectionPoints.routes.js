@@ -1,8 +1,39 @@
 const { Router } = require('express');
 const CollectionPointController = require('../controllers/CollectionPointController');
 const validateToken = require('../middlewares/validateToken');
+const isAdminMiddleware = require('../middlewares/isAdmin');
 
 const collectionPointsRoutes = new Router();
+
+collectionPointsRoutes.get(
+  '/count-all',
+  CollectionPointController.countAllCollectionPoint
+  /*
+    #swagger.tags = ['Pontos de Coleta']
+    #swagger.description = 'Endpoint para obter a contagem total de pontos de coleta.'
+    #swagger.responses[200] = {
+      description: 'Contagem de pontos de coleta retornada com sucesso.'
+    }
+    #swagger.responses[500] = {
+      description: 'Erro interno do servidor.'
+    }
+  */
+);
+
+collectionPointsRoutes.get(
+  '/all',
+  CollectionPointController.listAllCollectionPoints
+  /*
+    #swagger.tags = ['Pontos de Coleta']
+    #swagger.description = 'Endpoint para listar todos os pontos de coleta disponíveis no sistema.'
+    #swagger.responses[200] = {
+      description: 'Lista de pontos de coleta retornada com sucesso.'
+    }
+    #swagger.responses[500] = {
+      description: 'Erro interno do servidor.'
+    }
+  */
+);
 
 collectionPointsRoutes.post(
   '/',

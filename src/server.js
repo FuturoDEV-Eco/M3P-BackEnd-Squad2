@@ -3,8 +3,11 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const routes = require('./routes/routes');
 const connection = require('./database/connection');
+
 const port = process.env.PORT || 3001;
-app.listen(port, () => console.log(`Servidor rodando na porta ${port}`));
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Servidor rodando na porta ${port}`);
+});
 
 class Server {
   constructor(server = express()) {

@@ -1,9 +1,10 @@
 const express = require('express');
-const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const routes = require('./routes/routes');
 const connection = require('./database/connection');
-const SERVER_PORT = process.env.APP_PORT || 3001;
+
+// Usar a porta fornecida pela variável APP_PORT ou 3001 localmente
+const port = process.env.APP_PORT || 3001;
 
 class Server {
   constructor(server = express()) {
@@ -14,49 +15,40 @@ class Server {
   }
 
   middlewares(server) {
-    console.log('Checando middlewares... // Checking middlewares...');
+    console.log('Checando middlewares...');
 
-    // Configuração do CORS
-    const allowedOrigins = process.env.ALLOWED_ORIGINS
-      ? process.env.ALLOWED_ORIGINS.split(',')
-      : ['http://localhost:5173'];
+    // Configuração do CORS com o endereço do frontend no Vercel e Render
+    const allowedOrigins = [
+      'https://m3p-backend-destino-certo.onrender.com', // render
+      'https://m3-p-front-end-squad2-destino-certo.vercel.app', // vercel
+      'http://localhost:5173',
+    ];
 
     server.use(
       cors({
         origin: allowedOrigins,
-        credentials: true, // Permitir o envio de cookies
       })
     );
 
-    server.use(express.json()); // habilita o body parser
-    server.use(cookieParser()); // habilita o cookie parser
+    server.use(express.json());
 
-    console.log(
-      'Checando middlewares concluídos... // Checking middlewares completed...'
-    );
+    console.log('Middlewares configurados.');
   }
 
   async database() {
     try {
-      console.log(
-        'Conectando ao banco de dados... // Connecting to database...'
-      );
+      console.log('Conectando ao banco de dados...');
       await connection.authenticate();
       console.log('Conexão com o banco de dados estabelecida com sucesso.');
     } catch (error) {
-      console.log(
-        'Erro ao conectar ao banco // Error connecting to database',
-        error
-      );
+      console.log('Erro ao conectar ao banco de dados:', error);
     }
   }
 
   initialize(server) {
-    console.log('Iniciando o servidor... // Starting server...');
-    server.listen(SERVER_PORT, () => {
-      console.log(
-        `Servidor iniciado na porta: ${SERVER_PORT}! // Server started on port: ${SERVER_PORT}!`
-      );
+    console.log('Iniciando o servidor...');
+    server.listen(port, '0.0.0.0', () => {
+      console.log(`Servidor rodando na porta ${port}`);
     });
   }
 }

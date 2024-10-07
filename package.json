@@ -4,9 +4,12 @@
   "description": "Projeto final do módulo 2 - REST API",
   "main": "index.js",
   "scripts": {
+    "start": "node src/index.js",
     "start:prod": "node src/index.js",
     "start:dev": "nodemon src/index.js",
-    "swagger": "node ./autoGen.swagger.js"
+    "swagger": "node ./autoGen.swagger.js",
+    "migrate": "npx sequelize-cli db:migrate",
+    "seed": "npx sequelize-cli db:seed:all"
   },
   "keywords": [],
   "author": "Charles Biveu Doehl",

@@ -1,8 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const routes = require('./routes/routes');
-const { connection, syncDatabase } = require('./database/connection');
-const { seedDatabase } = require('./database/seeder'); // Função para rodar os seeds
+const connection = require('./database/connection');
 
 // Usar a porta fornecida pela variável APP_PORT ou 3001 localmente
 const port = process.env.APP_PORT || 3001;
@@ -18,9 +17,10 @@ class Server {
   middlewares(server) {
     console.log('Checando middlewares...');
 
+    // Configuração do CORS com o endereço do frontend no Vercel e Render
     const allowedOrigins = [
-      'https://m3p-backend-destino-certo.onrender.com',
-      'https://m3-p-front-end-squad2-destino-certo.vercel.app',
+      'https://m3p-backend-destino-certo.onrender.com', // render
+      'https://m3-p-front-end-squad2-destino-certo.vercel.app', // vercel
       'http://localhost:5173',
     ];
 
@@ -40,10 +40,6 @@ class Server {
       console.log('Conectando ao banco de dados...');
       await connection.authenticate();
       console.log('Conexão com o banco de dados estabelecida com sucesso.');
-
-      // Sincronizando o banco de dados e rodando os seeds
-      await syncDatabase(); // Recria as tabelas
-      await seedDatabase(); // Roda os seeds
     } catch (error) {
       console.log('Erro ao conectar ao banco de dados:', error);
     }

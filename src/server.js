@@ -4,7 +4,7 @@ const routes = require('./routes/routes');
 const connection = require('./database/connection');
 
 // Usar a porta fornecida pelo Render ou 3001 localmente
-const port = process.env.PORT || 3001;
+const port = process.env.APP_PORT || 3001;
 
 class Server {
   constructor(server = express()) {

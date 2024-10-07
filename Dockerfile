@@ -4,7 +4,7 @@ FROM node:20.15.0
 # Definir o diretório de trabalho dentro do container
 WORKDIR /app
 
-# Copiar apenas os arquivos de dependências para o container
+# Copiar os arquivos de dependências para o container
 COPY package*.json ./
 
 # Instalar apenas as dependências de produção
@@ -14,7 +14,7 @@ RUN npm install --production
 COPY . .
 
 # Expor a porta definida no .env (Render usa portas dinâmicas)
-EXPOSE ${PORT}
+EXPOSE ${APP_PORT}
 
 # Comando para rodar a aplicação
-CMD ["sh", "-c", "npx sequelize-cli db:migrate && npm run start:prod"]
+CMD ["npm", "run", "start:prod"]

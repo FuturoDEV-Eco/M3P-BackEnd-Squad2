@@ -3,7 +3,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const routes = require('./routes/routes');
 const connection = require('./database/connection');
-const SERVER_PORT = process.env.APP_PORT || 3001;
+const SERVER_PORT = process.env.PORT || process.env.APP_PORT || 3001;
 
 class Server {
   constructor(server = express()) {

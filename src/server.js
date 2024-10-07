@@ -3,8 +3,8 @@ const cors = require('cors');
 const routes = require('./routes/routes');
 const connection = require('./database/connection');
 
-// Usar a porta fornecida pelo Render ou 3001 localmente
-const port = process.env.PORT || 3001;
+// Usar a porta fornecida pela variável APP_PORT ou 3001 localmente
+const port = process.env.APP_PORT || 3001;
 
 class Server {
   constructor(server = express()) {
@@ -17,10 +17,10 @@ class Server {
   middlewares(server) {
     console.log('Checando middlewares...');
 
-    // Configuração do CORS com o endereço do frontend no Vercel
+    // Configuração do CORS com o endereço do frontend no Vercel e Render
     const allowedOrigins = [
       'https://m3p-backend-destino-certo.onrender.com', // render
-      'https://m3-p-front-end-squad2-destino-certo.vercel.app', // verccel
+      'https://m3-p-front-end-squad2-destino-certo.vercel.app', // vercel
       'http://localhost:5173',
     ];
 

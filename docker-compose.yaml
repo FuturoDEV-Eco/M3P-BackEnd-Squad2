@@ -13,5 +13,8 @@ services:
       - DB_DIALECT=${DB_DIALECT}
       - JWT_SECRET=${JWT_SECRET}
       - JWT_EXPIRES_IN=${JWT_EXPIRES_IN}
+      - APP_PORT=${APP_PORT}
     volumes:
       - .:/app
+    ports:
+      - '${APP_PORT}:${APP_PORT}'

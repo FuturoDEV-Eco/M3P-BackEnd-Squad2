@@ -4,10 +4,13 @@ const swaggerDocument = require('./doc.swagger.json');
 const LoginController = require('../controllers/LoginController');
 const usersRoutes = require('./users.routes');
 const collectionPointsRoutes = require('./collectionPoints.routes');
+const serverRoutes = require('./server.routes');
 
 const validateToken = require('../middlewares/validateToken');
 
 const routes = Router();
+
+routes.use('/server', serverRoutes); // Adicionando a rota de status do servidor
 
 routes.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

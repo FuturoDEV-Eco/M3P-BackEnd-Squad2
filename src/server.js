@@ -19,8 +19,9 @@ class Server {
 
     // Configuração do CORS com o endereço do frontend no Vercel
     const allowedOrigins = [
+      'https://m3p-backend-destino-certo.onrender.com', // render
+      'https://m3-p-front-end-squad2-destino-certo.vercel.app', // verccel
       'http://localhost:5173',
-      'https://m3-p-front-end-squad2-destino-certo.vercel.app',
     ];
 
     server.use(

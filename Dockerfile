@@ -1,5 +1,5 @@
 # Usar uma imagem oficial do Node.js como base
-FROM node:18
+FROM node:20.15.0
 
 # Definir o diretório de trabalho dentro do container
 WORKDIR /app
@@ -17,4 +17,4 @@ COPY . .
 EXPOSE ${PORT}
 
 # Comando para rodar a aplicação
-CMD ["npm", "run", "start:prod"]
+CMD ["sh", "-c", "npx sequelize-cli db:migrate && npm run start:prod"]

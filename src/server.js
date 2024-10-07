@@ -30,7 +30,7 @@ class Server {
       })
     );
 
-    server.use(express.json()); // Habilita o body parser
+    server.use(express.json());
 
     console.log('Middlewares configurados.');
   }

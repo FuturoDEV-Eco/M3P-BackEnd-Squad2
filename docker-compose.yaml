@@ -4,10 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - '${PORT}:${PORT}'
     environment:
-      - APP_PORT=${PORT}
       - DB_HOST=${DB_HOST}
       - DB_NAME=${DB_NAME}
       - DB_PORT=${DB_PORT}

@@ -17,4 +17,4 @@ COPY . .
 EXPOSE ${PORT}
 
 # Comando para rodar a aplicação
-CMD ["npm", "run", "start:prod"]
+CMD ["sh", "-c", "npx sequelize-cli db:migrate && npm run start:prod"]

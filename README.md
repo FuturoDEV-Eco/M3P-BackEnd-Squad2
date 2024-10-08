@@ -4,13 +4,16 @@
 
 # Destino Certo - API
 
-**Destino Certo - API** foi desenvolvido como projeto final, individual, do módulo 02 da formação **FuturoDev** do **Floripa Mais Tec**, coordenado pelo **Lab365** em parceria com o **SESI** e **SENAC**.
+**Destino Certo - API** foi desenvolvido como projeto final, individual, do módulo 03 da formação **FuturoDev** do **Floripa Mais Tec**, coordenado pelo **Lab365** em parceria com o **SESI** e **SENAI**.
 
-**Destino Certo** é uma plataforma que facilita o gerenciamento de resíduos e o acesso a pontos de coleta de materiais recicláveis. Usuários podem cadastrar novos pontos de coleta, encontrar pontos próximos em um mapa interativo ou em uma listagem, visualizar informações sobre os materiais aceitos em cada ponto e registrar suas próprias contribuições para a reciclagem. Confira a versão para o frontend desenvolvida para o módulo 1 [DestinoCerto](https://github.com/charlesbiveu/destinoCerto)
+**Destino Certo** é uma plataforma que facilita o gerenciamento de resíduos e o acesso a pontos de coleta de materiais recicláveis. Usuários podem cadastrar novos pontos de coleta, encontrar pontos próximos em um mapa interativo ou em uma listagem, visualizar informações sobre os materiais aceitos em cada ponto e registrar suas próprias contribuições para a reciclagem. Este projeto visa incentivar o descarte correto do lixo, auxiliando a localizar o ponto de coleta correto na sua região.
 
-**Destino Certo - API** é o projeto de backend que futuramente irá se conectar com o projeto de FrontEnd. **Destino Certo - API** adota uma arquitetura inspirada no modelo MVC, aplicando-se como REST API. O sistema é desenvolvido utilizando Node.js, PostgreSQL e diversas dependências amplamente utilizadas no mercado, proporcionando uma base sólida e escalável para o gerenciamento de dados e operações. Além disso, valoriza as boas práticas de segurança no desenvolvimento de software implementando medidas de proteção contra ameaças como injeção de SQL, cross-site scripting (XSS) e ataques de negação de serviço (DDoS).
+O projeto **Destino Certo - API** adota uma arquitetura inspirada no modelo MVC, aplicando-se como REST API. O sistema é desenvolvido utilizando Node.js, PostgreSQL e Sequelize, proporcionando uma base sólida e escalável para o gerenciamento de dados e operações.
 
-Este projeto visa incentivar o descarte correto do lixo, auxiliando a localizar o ponto de coleta correto na sua região.
+## Deploys da aplicação
+
+- Deploy BackEnd: [Render](https://m3p-backend-destino-certo.onrender.com/server/status)
+- Deploy FrontEnd: [Vercel](https://m3-p-front-end-squad2-destino-certo.vercel.app/)
 
 ## Roteiro da Aplicação
 
@@ -30,12 +33,17 @@ O Diagrama Entidade-Relacionamento pode ser visualizado do DrawSql.
 
 - [DrawSql](https://drawsql.app/teams/gp-13/diagrams/destino-certo)
 
+
+
 ## Instalação
+
+
+### A branch main esta configurada para o deploy automatico no [Render](https://render.com/), em caso de desenvolvimento, utilize a branch develop
 
 - Para usar o **Destino Certo - API**, clone ou faça download do repositório:
 
 ```bash
-git clone https://github.com/FuturoDEV-Eco/M3P-BackEnd-Squad2
+git clone https://github.com/FuturoDEV-Eco/M3P-BackEnd-Squad2.git
 ```
 
 - Depois execute a instalação das dependências
@@ -44,7 +52,7 @@ git clone https://github.com/FuturoDEV-Eco/M3P-BackEnd-Squad2
 npm install
 ```
 
-- Renomeie o arquivo `.env.example` para `.env` e cofigure conforme suas váriaves de ambiente
+- Renomeie o arquivo `.env.example` para `.env` e cofigure conforme suas váriaves de ambiente 
 
 - Confira se você tem o Postgres instalado então crie a base de dados
 
@@ -100,6 +108,24 @@ npm run start:prod
     - Erro de validação: 400 (Bad Request) com mensagem detalhada.
     - Erro interno: 500 (Internal Server Error).
 
+
+- **Criação de Usuário:**
+
+  - Endpoint: `PUT /usuarios/:id
+  - Informações necessárias: nome, sexo, CPF, endereço, e-mail, senha, data de nascimento.
+  - Validações:
+    - Nome: Obrigatório.
+    - Sexo: Obrigatório (M, F ou O).
+    - Endereço: CEP, rua, bairro, cidade, estado e número são obrigatórios.
+    - E-mail: Obrigatório, deve ser válido e único.
+    - Data de Nascimento: Obrigatória.
+  - Respostas:
+    - Sucesso: 201 (Created) com informações do usuário.
+    - E-mail duplicado: 409 (Conflict).
+    - Erro de validação: 400 (Bad Request) com mensagem detalhada.
+    - Erro interno: 500 (Internal Server Error).
+
+
 - **Deleção de Usuário:**
   - Endpoint: `DELETE /usuarios/:id`
   - Validações:
@@ -110,27 +136,13 @@ npm run start:prod
     - Usuário não encontrado: 404 (Not Found).
     - Usuário com pontos de coleta: 400 (Bad Request) com mensagem explicativa.
     - Erro interno: 500 (Internal Server Error).
-      
-- **Edição de usuário:**
-  - Endpoint: `PUT /usuarios/:id`
-  - Validações:
-    - Não pode alterar o campo de CPF.
-  - Respostas:
-    - Sucesso: 200 (OK) com mensagem de sucesso.
-    - Usuário não encontrado: 404 (Not Found).
-    - Usuário com pontos de coleta: 400 (Bad Request) com mensagem explicativa.
-    - Erro interno: 500 (Internal Server Error).
-      
-- **Listagem de usuário:**
-  - Endpoint: `PUT /usuarios/`
-  - Validações:
-    - Não podendo exibir informações sensiveis do usuário.
-  
-  - Respostas:
-    - Sucesso: 200 (OK) com mensagem de sucesso.
-    - Usuário não encontrado: 404 (Not Found).
-    - Usuário com pontos de coleta: 400 (Bad Request) com mensagem explicativa.
-    - Erro interno: 500 (Internal Server Error).
+
+
+- **Contar usuários ativos**
+  - Endpoint: `GET /usuarios/count
+  -  conta usuários
+    - Sucesso: 200 (OK) 
+   - Erro interno: 500 (Internal Server Error).
 
 ### Pontos de Coleta
 
@@ -153,7 +165,7 @@ npm run start:prod
 
   - Endpoint: `GET /local`
   - Validações:
-    - Apenas usuários autenticados e quem que criou o ponto de coleta podem acessar essa rota.
+    - Apenas usuários autenticados e quem criou o ponto de coleta podem acessar essa rota.
   - Respostas:
     - Sucesso: 200 (OK) com lista de pontos de coleta do usuário.
     - Erro interno: 500 (Internal Server Error).
@@ -204,6 +216,13 @@ npm run start:prod
     - Ponto de coleta ou CEP não encontrado: 404 (Not Found) com mensagem explicativa.
     - Erro interno: 500 (Internal Server Error).
 
+- **Contar pontos de coleta ativos**
+  - Endpoint: `GET /usuarios/count
+  -  conta usuários
+    - Sucesso: 200 (OK) 
+   - Erro interno: 500 (Internal Server Error).
+
+
 ### Autenticação e Segurança
 
 - **Login:**
@@ -238,8 +257,10 @@ npm run start:prod
 [![sequelize](https://img.shields.io/badge/sequelize-52B0E7?style=for-the-badge&logo=sequelize&logoColor=white)](https://sequelize.org/)
 [![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)](https://swagger.io/)
 [![Trello](https://img.shields.io/badge/Trello-5E4955?style=for-the-badge&logo=Trello&logoColor=white)](https://trello.com/b/goHFnQ89/destino-certo-api)
+[![Docker](https://img.shields.io/badge/docker-%231d63ed.svg?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
-O projeto **Destino Certo - API** adota uma arquitetura inspirada no modelo MVC, aplicando-se como REST API. O sistema é desenvolvido utilizando Node.js, PostgreSQL e Sequelize, proporcionando uma base sólida e escalável para o gerenciamento de dados e operações.
+
+
 
 ### Componentes e Bibliotecas
 
@@ -255,14 +276,10 @@ O projeto **Destino Certo - API** adota uma arquitetura inspirada no modelo MVC,
 - **sequelize**: ORM (Object-Relational Mapping) para Node.js, facilitando a interação com o banco de dados PostgreSQL através de modelos JavaScript.
 - **Swagger**: Ferramenta para documentar a API, fornecendo uma interface interativa para explorar os endpoints disponíveis.
 
-### Estrutura do projeto
-
-![estruturaDoProjeto](https://github.com/user-attachments/assets/18577b35-d609-4489-ab2f-ff8672a1546f)
-
 ## Documentação com Swagger
 
 
-https://github.com/user-attachments/assets/fdd82529-7a66-43b4-a197-46e5669b8556
+https://github.com/user-attachments/assets/65869eb4-32a3-4b1d-a08f-d516897e067a
 
 
 
@@ -420,6 +437,9 @@ Essas melhorias não só aumentariam a utilidade e a relevância da aplicação 
 
 Sites
 
+
+- Deploy BackEnd: [Render](https://render.com/)
+- Deploy FrontEnd: [Vercel](https://vercel.com/)
 - Gerar pessoas: [4Devs](https://www.4devs.com.br/gerador_de_pessoas)
 - Roteiro da aplicação: [ Trello ](https://trello.com/)
 - Gerar Diagramas ER: [DrawSql](https://drawsql.io)
